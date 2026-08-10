@@ -14,7 +14,7 @@ CREATE TABLE roles (
 -- 2. Permisos (Módulos del Sistema)
 CREATE TABLE permisos (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(50) NOT NULL UNIQUE,         -- ej: 'PARQUEO', 'TIPOS_PLAZA', 'REPORTES', 'USUARIOS'
+    nombre VARCHAR(50) NOT NULL UNIQUE,         -- 'DASHBOARD','ROLES','USUARIOS','TIPOS_PLAZA','PARQUEO','TARIFAS'.
     descripcion VARCHAR(255)
 );
 

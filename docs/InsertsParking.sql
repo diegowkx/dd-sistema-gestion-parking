@@ -4,7 +4,7 @@
 
 -- 1. Roles
 INSERT INTO roles (nombre, activo) VALUES
-('ADMIN', 1),
+('ADMINISTRADOR', 1),
 ('SUPERVISOR', 1),
 ('OPERADOR', 1);
 
@@ -19,13 +19,13 @@ INSERT INTO permisos (nombre, descripcion) VALUES
 
 -- 3. Permisos asignados a Roles
 INSERT INTO permisos_roles (rol_nombre, permiso_nombre) VALUES
--- ADMIN tiene acceso total
-('ADMIN', 'DASHBOARD'),
-('ADMIN', 'ROLES'),
-('ADMIN', 'USUARIOS'),
-('ADMIN', 'TIPOS_PLAZA'),
-('ADMIN', 'PARQUEO'),
-('ADMIN', 'TARIFAS'),
+-- ADMINISTRADOR tiene acceso total
+('ADMINISTRADOR', 'DASHBOARD'),
+('ADMINISTRADOR', 'ROLES'),
+('ADMINISTRADOR', 'USUARIOS'),
+('ADMINISTRADOR', 'TIPOS_PLAZA'),
+('ADMINISTRADOR', 'PARQUEO'),
+('ADMINISTRADOR', 'TARIFAS'),
 -- SUPERVISOR gestiona operaciones y reportes
 ('SUPERVISOR', 'DASHBOARD'),
 ('SUPERVISOR', 'PARQUEO'),
@@ -43,13 +43,13 @@ INSERT INTO permisos_roles (rol_nombre, permiso_nombre) VALUES
 -- Contraseña para todos los usuarios: "clave"
 -- Hash: $2y$10$VNgHI7pLLJc8otgTE/MMX.vLCVejzBT4mWskGyQ5AhA5vj2LSTZHG
 INSERT INTO usuarios (documento_id, rol_name, username, nombres, apellidos, correo, telefono, password_hash, activo) VALUES
-('70123456', 'ADMIN', 'admin_juan', 'Juan', 'Pérez Gómez', 'juan.perez@parqueo.com', '987654321', '$2y$10$VNgHI7pLLJc8otgTE/MMX.vLCVejzBT4mWskGyQ5AhA5vj2LSTZHG', 1),
-('70987654', 'OPERADOR', 'op_carlos', 'Carlos', 'López Ruiz', 'carlos.lopez@parqueo.com', '912345678', '$2y$10$VNgHI7pLLJc8otgTE/MMX.vLCVejzBT4mWskGyQ5AhA5vj2LSTZHG', 1),
-('70555444', 'SUPERVISOR', 'sup_maria', 'María', 'Rodríguez Silva', 'maria.rodriguez@parqueo.com', '955511223', '$2y$10$VNgHI7pLLJc8otgTE/MMX.vLCVejzBT4mWskGyQ5AhA5vj2LSTZHG', 1);
+('70123456', 'ADMINISTRADOR', 'admin_juan', 'Juan', 'Pérez Gómez', 'admin@parkquickzone.com', '987654321', '$2y$10$VNgHI7pLLJc8otgTE/MMX.vLCVejzBT4mWskGyQ5AhA5vj2LSTZHG', 1),
+('70987654', 'OPERADOR', 'op_carlos', 'Carlos', 'López Ruiz', 'carlos.lopez@parkquickzone.com', '912345678', '$2y$10$VNgHI7pLLJc8otgTE/MMX.vLCVejzBT4mWskGyQ5AhA5vj2LSTZHG', 1),
+('70555444', 'SUPERVISOR', 'sup_maria', 'María', 'Rodríguez Silva', 'maria.rodriguez@parkquickzone.com', '955511223', '$2y$10$VNgHI7pLLJc8otgTE/MMX.vLCVejzBT4mWskGyQ5AhA5vj2LSTZHG', 1);
 
 -- 5. Historial de IPs (Auditoría)
 INSERT INTO iphys (usuario_username, rol_name, ip_address, fecha_acceso) VALUES
-('admin_juan', 'ADMIN', '192.168.1.10', '2026-08-10 08:00:00'),
+('admin_juan', 'ADMINISTRADOR', '192.168.1.10', '2026-08-10 08:00:00'),
 ('op_carlos', 'OPERADOR', '192.168.1.15', '2026-08-10 08:15:00'),
 ('sup_maria', 'SUPERVISOR', '192.168.1.12', '2026-08-10 09:00:00');
 

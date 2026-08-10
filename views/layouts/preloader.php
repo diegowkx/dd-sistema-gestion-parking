@@ -1,10 +1,9 @@
-<div id="preloader">
-    <div class="gooey">
-	  <span class="dot"></span>
-	  <div class="dots">
-		<span></span>
-		<span></span>
-		<span></span>
-	  </div>
-	</div>
+<!-- Preloader start -->
+<div id="preloader" style="display: none;">
+    <div class="sk-three-bounce">
+        <div class="sk-child sk-bounce1"></div>
+        <div class="sk-child sk-bounce2"></div>
+        <div class="sk-child sk-bounce3"></div>
+    </div>
 </div>
+<!-- Preloader end -->

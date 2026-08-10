@@ -1,7 +1,8 @@
 $(document).ready(function() {
 
-    // Silenciar alertas de error de DataTables
-    $.fn.dataTable.ext.errMode = 'none';
+    if ($.fn.DataTable && $.fn.dataTable.ext) {
+        $.fn.dataTable.ext.errMode = 'none';
+    }
 
     const modalElement = document.getElementById('modalIpDetalle');
     const modalIp = modalElement ? new bootstrap.Modal(modalElement) : null;

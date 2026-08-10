@@ -3,5 +3,6 @@
         // "**/composer.json": true,
         // "**/composer.lock": true,
         // "**/vendor": true
-    }
+    },
+    "liveServer.settings.port": 5501
 }

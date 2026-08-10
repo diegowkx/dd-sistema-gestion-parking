@@ -1,12 +1,21 @@
-<link href="<?php echo BASE_URL; ?>/assets/vendor/jquery-nice-select/css/nice-select.css" rel="stylesheet">
+<!-- loader-->
+<link href="<?php echo BASE_URL; ?>/assets/css/pace.min.css" rel="stylesheet" />
+<script src="<?php echo BASE_URL; ?>/assets/js/pace.min.js"></script>
 
-<!-- Datatable -->
-<link href="<?php echo BASE_URL; ?>/assets/vendor/datatables/css/jquery.dataTables.min.css" rel="stylesheet">
-<link href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css" rel="stylesheet">
+<!--plugins-->
+<link href="<?php echo BASE_URL; ?>/assets/plugins/simplebar/css/simplebar.css" rel="stylesheet" />
+<link href="<?php echo BASE_URL; ?>/assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet" />
+<link href="<?php echo BASE_URL; ?>/assets/plugins/metismenu/css/metisMenu.min.css" rel="stylesheet" />
 
-<!-- Sweet Alert -->
-<link href="<?php echo BASE_URL; ?>/assets/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
-
-<!-- Style css -->
+<!-- CSS Files -->
+<link href="<?php echo BASE_URL; ?>/assets/css/bootstrap.min.css" rel="stylesheet">
+<link href="<?php echo BASE_URL; ?>/assets/css/bootstrap-extended.css" rel="stylesheet">
 <link href="<?php echo BASE_URL; ?>/assets/css/style.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="<?php echo BASE_URL; ?>/assets/css/icons.css" rel="stylesheet">
+<link href="<?php echo BASE_URL; ?>/assets/css/transformations.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+
+<!--Theme Styles-->
+<link href="<?php echo BASE_URL; ?>/assets/css/dark-theme.css" rel="stylesheet" />
+<link href="<?php echo BASE_URL; ?>/assets/css/semi-dark.css" rel="stylesheet" />
+<link href="<?php echo BASE_URL; ?>/assets/css/header-colors.css" rel="stylesheet" />

@@ -2,7 +2,7 @@
     <!-- Header del Logo -->
     <div class="nav-header">
         <a href="?c=dashboard" class="brand-logo d-flex align-items-center justify-content-center w-100 h-100 text-decoration-none">
-            <img src="<?php echo BASE_URL; ?>/assets/images/logo-full.png" alt="<?php echo APP_NAME; ?>" class="sidebar-logo">
+            <img src="<?php echo BASE_URL; ?>/assets/images/logo-word.png" alt="<?php echo APP_NAME; ?>" class="sidebar-logo">
             <img src="<?php echo BASE_URL; ?>/assets/images/logo-image.png" alt="<?php echo APP_NAME; ?>" class="sidebar-logo-icon">
         </a>
     </div>

@@ -22,8 +22,6 @@
 
 <!-- 7. Lógica interactiva del Sidebar (Toggle/Animación/LocalStorage) -->
 <script src="<?php echo BASE_URL; ?>/assets/js/custom/sidebar.js"></script>
-<script src="<?php echo BASE_URL; ?>/assets/js/custom/components.js"></script>
-<script src="<?php echo BASE_URL; ?>/assets/js/custom/datatables.js"></script>
 
 
 

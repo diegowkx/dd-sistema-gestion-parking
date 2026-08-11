@@ -8,8 +8,7 @@ $(document).ready(function () {
     const lblTituloUsuario = document.getElementById('lblTituloUsuario');
     const inputDocumento = document.getElementById('documento_id');
     const inputPassword = document.getElementById('password');
-    const reqPassword = document.getElementById('reqPassword');
-    const hintPassword = document.getElementById('hintPassword');
+    const reqPasswordLabel = document.getElementById('reqPasswordLabel');
 
     // ==========================================
     // RESTRICCIONES DE ENTRADA EN TIEMPO REAL
@@ -43,18 +42,23 @@ $(document).ready(function () {
             }
         },
         columns: [
-            { data: 'documento_id' },
+            { 
+                data: 'documento_id',
+                render: function (data) {
+                    return `<span class="fw-bold text-dark">${data}</span>`;
+                }
+            },
             {
                 data: null,
                 render: function (row) {
-                    return `<span class="fw-bold" style="color: #1e293b;">${row.nombres} ${row.apellidos}</span>`;
+                    return `<span class="fw-bold text-slate-800">${row.nombres} ${row.apellidos}</span>`;
                 }
             },
             { data: 'username' },
             {
                 data: 'rol_name',
                 render: function (data) {
-                    return `<span class="badge bg-secondary">${data}</span>`;
+                    return `<span class="badge bg-secondary fs-7">${data}</span>`;
                 }
             },
             { data: 'correo' },
@@ -62,8 +66,8 @@ $(document).ready(function () {
                 data: 'activo',
                 render: function (data) {
                     return data == 1
-                        ? '<span class="badge bg-success">ACTIVO</span>'
-                        : '<span class="badge bg-danger">INACTIVO</span>';
+                        ? '<span class="badge bg-success px-3 py-2">ACTIVO</span>'
+                        : '<span class="badge bg-danger px-3 py-2">INACTIVO</span>';
                 }
             },
             {
@@ -73,22 +77,27 @@ $(document).ready(function () {
                 render: function (row) {
                     const jsonUsuario = encodeURIComponent(JSON.stringify(row));
 
+                    // SVGs coherentes con el módulo de roles
+                    const svgEditar = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>`;
+                    const svgDesactivar = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="17" y1="8" x2="22" y2="13"/><line x1="22" y1="8" x2="17" y2="13"/></svg>`;
+                    const svgRestaurar = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></svg>`;
+
                     let botones = `
-                        <button type="button" class="btn btn-warning text-white btn-editar-usuario rounded-circle" data-usuario="${jsonUsuario}" style="width: 36px; height: 36px; padding: 0; display: inline-flex; align-items: center; justify-content: center;" title="Editar">
-                            <i class="fas fa-pencil-alt fs-6"></i>
+                        <button type="button" class="btn btn-warning text-white btn-editar-usuario rounded-circle shadow-sm" data-usuario="${jsonUsuario}" style="width: 36px; height: 36px; padding: 0; display: inline-flex; align-items: center; justify-content: center;" title="Editar">
+                            ${svgEditar}
                         </button>
                     `;
 
                     if (row.activo == 1) {
                         botones += `
-                            <button type="button" class="btn btn-danger btn-desactivar-usuario rounded-circle" data-id="${row.documento_id}" data-nombre="${row.nombres} ${row.apellidos}" style="width: 36px; height: 36px; padding: 0; display: inline-flex; align-items: center; justify-content: center;" title="Desactivar">
-                                <i class="fas fa-user-slash text-white fs-6"></i>
+                            <button type="button" class="btn btn-danger btn-desactivar-usuario rounded-circle shadow-sm" data-id="${row.documento_id}" data-nombre="${row.nombres} ${row.apellidos}" style="width: 36px; height: 36px; padding: 0; display: inline-flex; align-items: center; justify-content: center;" title="Desactivar">
+                                ${svgDesactivar}
                             </button>
                         `;
                     } else {
                         botones += `
-                            <button type="button" class="btn btn-success btn-restaurar-usuario rounded-circle" data-id="${row.documento_id}" data-nombre="${row.nombres} ${row.apellidos}" style="width: 36px; height: 36px; padding: 0; display: inline-flex; align-items: center; justify-content: center;" title="Restaurar">
-                                <i class="fas fa-user-check text-white fs-6"></i>
+                            <button type="button" class="btn btn-success btn-restaurar-usuario rounded-circle shadow-sm" data-id="${row.documento_id}" data-nombre="${row.nombres} ${row.apellidos}" style="width: 36px; height: 36px; padding: 0; display: inline-flex; align-items: center; justify-content: center;" title="Restaurar">
+                                ${svgRestaurar}
                             </button>
                         `;
                     }
@@ -113,6 +122,7 @@ $(document).ready(function () {
         }
     });
 
+    // Control de pestañas
     document.querySelectorAll('#pills-tab-usuarios .tab-estado').forEach(btn => {
         btn.addEventListener('click', function () {
             document.querySelectorAll('#pills-tab-usuarios .tab-estado').forEach(b => b.classList.remove('active'));
@@ -123,17 +133,17 @@ $(document).ready(function () {
     });
 
     function configurarModoPassword(esEdicion) {
+        if (!reqPasswordLabel) return;
         if (esEdicion) {
-            if (reqPassword) reqPassword.classList.add('d-none');
-            if (hintPassword) hintPassword.style.display = 'block';
+            reqPasswordLabel.innerHTML = 'Contraseña <span class="text-muted fw-normal extra-small">(Opcional)</span>';
             if (inputPassword) inputPassword.required = false;
         } else {
-            if (reqPassword) reqPassword.classList.remove('d-none');
-            if (hintPassword) hintPassword.style.display = 'none';
+            reqPasswordLabel.innerHTML = 'Contraseña <span class="text-danger">*</span>';
             if (inputPassword) inputPassword.required = true;
         }
     }
 
+    // Botón Nuevo Usuario
     const btnNuevo = document.querySelector('.btn-nuevo-usuario');
     if (btnNuevo && usuarioModal) {
         btnNuevo.addEventListener('click', function () {
@@ -151,8 +161,10 @@ $(document).ready(function () {
         });
     }
 
+    // Eventos delegados de tabla (Editar, Desactivar, Restaurar)
     document.addEventListener('click', function (e) {
 
+        // --- EDITAR ---
         const btnEditar = e.target.closest('.btn-editar-usuario');
         if (btnEditar && usuarioModal) {
             const rawData = btnEditar.getAttribute('data-usuario');
@@ -176,7 +188,6 @@ $(document).ready(function () {
                     document.getElementById('nombres').value = data.nombres;
                     document.getElementById('apellidos').value = data.apellidos;
                     document.getElementById('correo').value = data.correo;
-                    document.getElementById('telefono').value = data.telefono || '';
 
                     if (inputDocumento) inputDocumento.readOnly = true;
                     configurarModoPassword(true);
@@ -188,6 +199,7 @@ $(document).ready(function () {
                 .catch(() => Swal.fire('Error', 'Error de conexión al cargar el usuario', 'error'));
         }
 
+        // --- DESACTIVAR ---
         const btnDesactivar = e.target.closest('.btn-desactivar-usuario');
         if (btnDesactivar) {
             const id = btnDesactivar.getAttribute('data-id');
@@ -198,8 +210,8 @@ $(document).ready(function () {
                 text: `¿Deseas desactivar a "${nombre}"? No podrá iniciar sesión mientras esté inactivo.`,
                 icon: 'warning',
                 showCancelButton: true,
-                cancelButtonColor: '#34495e',
                 confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
                 confirmButtonText: 'Sí, Desactivar',
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
@@ -222,6 +234,7 @@ $(document).ready(function () {
             });
         }
 
+        // --- RESTAURAR ---
         const btnRestaurar = e.target.closest('.btn-restaurar-usuario');
         if (btnRestaurar) {
             const id = btnRestaurar.getAttribute('data-id');
@@ -270,11 +283,9 @@ $(document).ready(function () {
             const nombres = document.getElementById('nombres').value.trim();
             const apellidos = document.getElementById('apellidos').value.trim();
             const correo = document.getElementById('correo').value.trim();
-            const telefono = document.getElementById('telefono').value.trim();
             const password = document.getElementById('password').value;
             const rol = document.getElementById('rol_name').value;
 
-            // Validaciones Frontend
             if (!doc || doc.length < 8 || doc.length > 15) {
                 return Swal.fire('Atención', 'El documento debe contener entre 8 y 15 números.', 'warning');
             }
@@ -302,10 +313,6 @@ $(document).ready(function () {
             const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!regexEmail.test(correo)) {
                 return Swal.fire('Atención', 'Ingrese un correo electrónico válido.', 'warning');
-            }
-
-            if (telefono && (telefono.length < 7 || telefono.length > 15)) {
-                return Swal.fire('Atención', 'El teléfono debe contener entre 7 y 15 dígitos.', 'warning');
             }
 
             const formData = new FormData(this);

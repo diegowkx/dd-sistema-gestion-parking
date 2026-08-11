@@ -1,44 +1,78 @@
-<div class="page-content-wrapper">
-    <header class="top-header">
-        <nav class="navbar navbar-expand gap-3">
-            <div class="mobile-menu-button"><ion-icon name="menu-sharp"></ion-icon></div>
-            <div class="d-none d-sm-flex align-items-center text-muted fw-semibold">
-                <span>Panel de control</span>
-            </div>
-            <div class="top-navbar-right ms-auto">
-                <ul class="navbar-nav align-items-center">
-                    <li class="nav-item dropdown dropdown-user-setting">
-                        <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="javascript:;" data-bs-toggle="dropdown">
-                            <div class="user-setting">
-                                <img src="<?php echo BASE_URL; ?>/assets/images/avatars/06.png" class="user-img" alt="Perfil">
-                            </div>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li>
-                                <a class="dropdown-item" href="javascript:;" id="btn-abrir-perfil">
-                                    <div class="d-flex flex-row align-items-center gap-2">
-                                        <img src="<?php echo BASE_URL; ?>/assets/images/avatars/06.png" alt="" class="rounded-circle" width="54" height="54">
-                                        <div>
-                                            <h6 class="mb-0 dropdown-user-name">Usuario</h6>
-                                            <small class="mb-0 dropdown-user-designation text-secondary">Administrador</small>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <a class="dropdown-item" href="javascript:;">
-                                    <div class="d-flex align-items-center">
-                                        <div><ion-icon name="person-outline"></ion-icon></div>
-                                        <div class="ms-3"><span>Perfil</span></div>
-                                    </div>
-                                </a>
-                            </li>
-                        </ul>
+<!--**********************************
+    Nav header start
+***********************************-->
+<div class="nav-header d-flex align-items-center justify-content-between px-3">
+    <a href="index.php" class="brand-logo d-flex align-items-center justify-content-center flex-grow-1 overflow-hidden" style="max-height: 100%; padding: 5px;">
+        <img src="<?php echo BASE_URL; ?>/assets/images/logo-full.png" 
+             alt="GestCar Core" 
+             class="img-fluid" 
+             style="max-height: 100%; max-width: 100%; object-fit: contain; width: auto; height: auto;">
+    </a>
+    <div class="nav-control">
+        <div class="hamburger">
+            <span class="line" style="background-color: #6c757d;"></span>
+            <span class="line" style="background-color: #6c757d;"></span>
+            <span class="line" style="background-color: #6c757d;"></span>
+        </div>
+    </div>
+</div>
+<!--**********************************
+    Nav header end
+***********************************-->
+
+<!--**********************************
+    Header start
+***********************************-->
+<div class="header">
+    <div class="header-content">
+        <nav class="navbar navbar-expand">
+            <div class="collapse navbar-collapse justify-content-between">
+                <div class="header-left"></div>
+                <ul class="navbar-nav header-right">
+
+                    <li class="nav-item d-flex align-items-center me-3">
+                        <div class="header-info text-end">
+                            <span class="fs-16 font-w600 d-block text-dark">
+                                <?= htmlspecialchars(trim($_SESSION['user_nombres'] . ' ' . $_SESSION['user_apellidos']) ?: $_SESSION['user_name']); ?>
+                            </span>
+                            <small class="font-w400 d-block text-muted">
+                                <?= htmlspecialchars($_SESSION['user_rol']); ?>
+                            </small>
+                        </div>
                     </li>
+
+                    <li class="nav-item dropdown header-profile">
+                        <a class="nav-link p-1 rounded-circle" href="javascript:void(0);" role="button" data-bs-toggle="dropdown" style="background: linear-gradient(135deg, #d9383a 0%, #ff6b6b 100%); display: inline-flex; align-items: center; justify-content: center;">
+                            <img src="<?php echo BASE_URL; ?>/assets/images/foto.png" width="50" height="50" style="border-radius: 50%; object-fit: cover; border: 2px solid #ffffff;" alt="Usuario"/>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end">
+                            <a href="javascript:void(0);" id="btn-abrir-perfil" class="dropdown-item ai-icon">
+                                <svg id="icon-user1" xmlns="http://www.w3.org/2000/svg" style="color: #6c757d;" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                                <span class="ms-2">Perfil</span>
+                            </a>
+
+                            <a href="<?php echo BASE_URL; ?>?c=auth&a=logout" class="dropdown-item ai-icon">
+                                <svg id="icon-logout" xmlns="http://www.w3.org/2000/svg" class="text-danger" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                    <polyline points="16 17 21 12 16 7"></polyline>
+                                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                                </svg>
+                                <span class="ms-2">Cerrar Sesión</span>
+                            </a>
+                        </div>
+                    </li>
+                    
                 </ul>
             </div>
         </nav>
-    </header>
+    </div>
+</div>
 
-    <div class="page-content">
+<!-- Profile Modal -->
+<?php include_once __DIR__ . '/../profile/profile_modal.php'; ?>
+<!--**********************************
+    Header end ti-comment-alt
+***********************************-->

@@ -8,13 +8,11 @@
 </head>
 <body>
 
-    <?php include __DIR__ . '/../layouts/preloader.php'; ?>
-
-    <div id="main-wrapper" class="wrapper">
+    <div id="main-wrapper">
 
         <?php include __DIR__ . '/../layouts/topbar.php'; ?>
         <?php include __DIR__ . '/../layouts/sidebar.php'; ?>
-
+        
         <div class="content-body">
             <div class="container-fluid">
                 <!-- Header -->
@@ -237,8 +235,6 @@
     </div>
 
     <?php include __DIR__ . '/../layouts/scripts.php'; ?>
-    <?php include_once __DIR__ . '/../profile/profile_modal.php'; ?>
     <script src="<?php echo BASE_URL; ?>/views/dashboard/dashboard.js"></script>
-    <script src="<?php echo BASE_URL; ?>/views/profile/profile.js"></script>
 </body>
 </html>

@@ -97,7 +97,7 @@ class ParqueoController {
             exit;
         }
 
-        $usuarioUsername = (string)($_SESSION['username'] ?? '');
+        $usuarioUsername = (string)($_SESSION['user_name'] ?? '');
         if ($usuarioUsername === '') {
             echo json_encode(['success' => false, 'message' => 'Sesión no válida, vuelve a iniciar sesión.']);
             exit;
@@ -159,7 +159,7 @@ class ParqueoController {
             exit;
         }
 
-        $usuarioUsername = (string)($_SESSION['username'] ?? '');
+        $usuarioUsername = (string)($_SESSION['user_name'] ?? '');
         if ($usuarioUsername === '') {
             echo json_encode(['success' => false, 'message' => 'Sesión no válida, vuelve a iniciar sesión.']);
             exit;

@@ -164,8 +164,34 @@ class TiposPlazaController {
         require_once __DIR__ . '/../models/TipoPlaza.php';
         $tipoPlazaModel = new TipoPlaza($pdo);
 
+        // 1. Obtener el tipo de plaza para conocer su nombre
+        $tipoPlaza = $tipoPlazaModel->getById($id);
+        if (!$tipoPlaza) {
+            echo json_encode(['success' => false, 'message' => 'Tipo de plaza no encontrado']);
+            exit;
+        }
+
+        $nombreTipoPlaza = $tipoPlaza['nombre']; // O el campo exacto que almacene el nombre
+
+        // 2. Verificar si hay parkings activos usando este tipo de plaza
+        $stmtCheck = $pdo->prepare("SELECT COUNT(*) FROM parking WHERE tipo_plaza_nombre = ? AND estado = 'ACTIVO'");
+        $stmtCheck->execute([$nombreTipoPlaza]);
+        $activosCount = (int)$stmtCheck->fetchColumn();
+
+        if ($activosCount > 0) {
+            echo json_encode([
+                'success' => false, 
+                'message' => "No se puede eliminar el tipo de plaza '{$nombreTipoPlaza}' porque hay {$activosCount} vehículo(s) ocupándolo actualmente."
+            ]);
+            exit;
+        }
+
+        // 3. Si no hay parkings activos, proceder a eliminar/desactivar
         $resultado = $tipoPlazaModel->delete($id);
-        echo json_encode(['success' => $resultado, 'message' => $resultado ? 'Tipo de plaza desactivado correctamente' : 'No se pudo desactivar el tipo de plaza']);
+        echo json_encode([
+            'success' => $resultado, 
+            'message' => $resultado ? 'Tipo de plaza desactivado correctamente' : 'No se pudo desactivar el tipo de plaza'
+        ]);
         exit;
     }
 

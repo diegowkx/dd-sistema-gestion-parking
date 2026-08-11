@@ -1,0 +1,66 @@
+/* ==========================================================================
+   ESTRUCTURA Y DISEÑO FOOTER (footer.css)
+   ========================================================================== */
+
+.footer {
+    position: fixed !important;
+    bottom: 0;
+    left: 0;
+    width: 100% !important;
+    margin-left: 0 !important;
+    height: 57px !important;
+    z-index: 1050;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, #569208 0%, #3d6a05 100%) !important;
+}
+
+.footer-sidebar-piece {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: var(--sidebar-width);
+    height: 100%;
+    background: linear-gradient(135deg, #569208 0%, #3d6a05 100%) !important;
+    overflow: hidden;
+    z-index: 2;
+    transition: width 0.3s ease;
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.footer .container-fluid {
+    width: 100% !important;
+    padding-left: calc(var(--sidebar-width) + 1.5rem) !important;
+    padding-right: 2rem !important;
+    z-index: 3;
+}
+
+.footer.bg-gradient-primary {
+    background: linear-gradient(135deg, #569208 0%, #3d6a05 100%) !important;
+}
+
+.footer .text-white-80 {
+    color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.footer-dec-circle-1 {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 50%;
+    top: -20px;
+    right: 20px;
+    pointer-events: none;
+}
+
+.footer-dec-circle-2 {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    bottom: -15px;
+    left: 40px;
+    pointer-events: none;
+}

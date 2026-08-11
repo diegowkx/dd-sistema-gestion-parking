@@ -1,13 +1,16 @@
 <div class="header font-primary-family">
     
     <div class="header-content d-flex align-items-center justify-content-between px-4">
-        <!-- 7 Círculos decorativos grises distribuidos por toda la topbar -->
-        <div class="header-dec-circle-1"></div>
-        <div class="header-dec-circle-2"></div>
-        <div class="header-dec-circle-3"></div>
-        <div class="header-dec-circle-4"></div>
-        <div class="header-dec-circle-5"></div>
-        <div class="header-dec-circle-6"></div>
+        <!-- Contenedor exclusivo para los círculos con overflow hidden -->
+        <div class="header-decorations">
+            <div class="header-dec-circle-1"></div>
+            <div class="header-dec-circle-2"></div>
+            <div class="header-dec-circle-3"></div>
+            <div class="header-dec-circle-4"></div>
+            <div class="header-dec-circle-5"></div>
+            <div class="header-dec-circle-6"></div>
+            <div class="header-dec-circle-7"></div>
+        </div>
         
         <!-- Botón para alternar / colapsar Sidebar -->
         <div class="header-left d-flex align-items-center">

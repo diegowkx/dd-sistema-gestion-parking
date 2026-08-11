@@ -1,82 +1,76 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <?php include __DIR__ . '/../layouts/head/head_meta.php'; ?>
-    <?php include __DIR__ . '/../layouts/head/head_css.php'; ?>
+    <?php include __DIR__ . '/../layouts/head.php'; ?>
 
+    <!-- CSS Exclusivo del Login -->
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/custom/login.css">
 </head>
-<body class="vh-100">
-    <div class="authincation h-100">
-        <div class="container h-100">
-            <div class="row justify-content-center h-100 align-items-center">
-                <div class="col-md-6">
-                    <div class="authincation-content">
-                        <div class="row no-gutters">
-                            <div class="col-xl-12">
-                                <div class="auth-form">
-                                    <div class="text-center mb-3">
-                                        <a href="index.php">
-                                            <img src="<?php echo BASE_URL; ?>/assets/images/logo-full.png" alt="Logo" class="img-fluid" style="max-height: 160px; width: auto;">
-                                        </a>
-                                    </div>
-                                    <h4 class="text-center mb-4">Login</h4>
-                                    
-                                    <form id="loginForm" action="<?php echo BASE_URL; ?>/?c=auth&a=process_login" method="POST">
-                                        <!-- Campo de Correo Electrónico -->
-                                        <div class="mb-3">
-                                            <label class="mb-1"><strong>Correo electrónico</strong></label>
-                                            <input type="email" class="form-control" id="emailInput" name="email" placeholder="tucorreo@example.com" required autocomplete="email">
-                                        </div>
-                                        <!-- Campo de Contraseña Ocultable -->
-                                        <div class="mb-3">
-                                            <label class="mb-1"><strong>Contraseña</strong></label>
-                                            <div class="position-relative">
-                                                <input type="password" class="form-control" id="passwordInput" name="password" placeholder="Contraseña" style="padding-right: 45px;" autocomplete="current-password" required>
-                                                <span id="togglePassword" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #6e6e6e; z-index: 10;">
-                                                    <i class="fa fa-eye" id="toggleIcon"></i>
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <style>
-                                        .btn-custom-red {
-                                            background-color: #d9383a !important;
-                                            border-color: #d9383a !important;
-                                            color: #ffffff !important;
-                                        }
-                                        .btn-custom-red:hover {
-                                            background-color: #b82d2f !important; /* Tono un poco más oscuro al pasar el cursor */
-                                            border-color: #b82d2f !important;
-                                        }
-                                        </style>
+<body class="font-primary-family login-body">
 
-                                        <div class="text-center">
-                                            <button type="submit" class="btn btn-custom-red btn-block">Ingresar</button>
-                                        </div>
-                                    </form>
+    <div class="login-split-container">
+        <!-- Columna Izquierda: Diagonal Decorativa -->
+        <div class="login-banner-side">
+            <div class="login-banner-overlay">
+                <div class="banner-text">
+                    <h2 class="text-bold"><?php echo APP_NAME; ?></h2>
+                    <p>Sistema de Gestión Integrada</p>
+                </div>
+            </div>
+        </div>
 
-                                </div>
-                            </div>
+        <!-- Columna Derecha: Formulario de Login -->
+        <div class="login-form-side">
+            <div class="login-card-box">
+                <div class="login-header text-center">
+                    <a href="index.php" class="brand-logo text-bold">
+                        <?php echo APP_NAME; ?>
+                    </a>
+                    <h4 class="login-title text-bold">Iniciar Sesión</h4>
+                </div>
+
+                <form id="loginForm" action="<?php echo BASE_URL; ?>/?c=auth&a=process_login" method="POST" class="login-form">
+                    <!-- Campo de Correo Electrónico -->
+                    <div class="form-group mb-3">
+                        <label for="emailInput" class="text-bold mb-1">Correo electrónico</label>
+                        <input type="email" class="form-control custom-input" id="emailInput" name="email" placeholder="tucorreo@example.com" required autocomplete="email">
+                    </div>
+
+                    <!-- Campo de Contraseña Encapsulado -->
+                    <div class="form-group mb-4">
+                        <label for="passwordInput" class="text-bold mb-1">Contraseña</label>
+                        <div class="password-wrapper">
+                            <input type="password" class="form-control custom-input" id="passwordInput" name="password" placeholder="••••••••" required autocomplete="current-password">
+                            <button type="button" id="togglePassword" class="password-toggle-btn" tabindex="-1">
+                                <i class="fa fa-eye" id="toggleIcon"></i>
+                            </button>
                         </div>
                     </div>
-                </div>
+
+                    <div class="form-action">
+                        <button type="submit" class="btn btn-custom-submit text-bold">Ingresar</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
-    <!-- Scripts Base de la plantilla -->
+    <!-- 1. Scripts globales (jQuery, DataTables, SweetAlert2, Config, Profile JS) -->
     <?php include __DIR__ . '/../layouts/scripts.php'; ?>
 
-    <!-- Manejo de Alertas PHP con SweetAlert2 -->
+    <!-- 2. Alertas dinámicas con SweetAlert2 -->
     <?php if (isset($error) && $error): ?>
     <script>
         Swal.fire({
             icon: 'error',
             title: '¡Acceso Denegado!',
-            text: '<?php echo $error; ?>',
-            confirmButtonColor: '#ff7301',
+            text: '<?php echo addslashes($error); ?>',
+            confirmButtonColor: (typeof AppConfig !== 'undefined' && AppConfig.sweetAlertDefaults) 
+                ? AppConfig.sweetAlertDefaults.confirmButtonColor 
+                : '#d9383a',
             background: '#ffffff',
             customClass: { popup: 'shadow-lg' },
-            heightAuto: false // <-- AÑADE ESTA LÍNEA
+            heightAuto: false
         }).then(() => {
             window.history.replaceState({}, document.title, window.location.pathname);
         });
@@ -88,18 +82,21 @@
         Swal.fire({
             icon: 'success',
             title: '¡Completado!',
-            text: '<?php echo $success; ?>',
+            text: '<?php echo addslashes($success); ?>',
             timer: 3000,
             showConfirmButton: false,
             timerProgressBar: true,
-            heightAuto: false // <-- AÑADE ESTA LÍNEA TAMBIÉN
+            heightAuto: false
         }).then(() => {
             window.history.replaceState({}, document.title, window.location.pathname);
         });
     </script>
     <?php endif; ?>
 
-    <!-- Script de login -->
+    <!-- 3. JS de la interfaz general -->
+    <script src="<?php echo BASE_URL; ?>/assets/js/custom/login.js"></script>
+
+    <!-- 4. Script de login -->
     <script src="<?php echo BASE_URL; ?>/views/auth/login.js?v=<?php echo time(); ?>"></script>
 </body>
 </html>

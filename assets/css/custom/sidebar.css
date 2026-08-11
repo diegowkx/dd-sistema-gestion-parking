@@ -1,0 +1,410 @@
+/* ==========================================================================
+   ESTRUCTURA Y DISEÑO SIDEBAR - VERDE (#569208) (sidebar.css)
+   ========================================================================== */
+
+:root {
+    --header-height: 5.5rem;          
+    --sidebar-width: 17.5rem;         
+    --sidebar-collapsed-width: 5.5rem;
+    --primary-color: #569208;         
+    --primary-hover: #437306;         
+    --text-contrast: #ffffff;         
+}
+
+#main-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f8f9fa;
+}
+
+/* ==========================================================================
+   1. CONFIGURACIÓN GENERAL DEL SIDEBAR
+   ========================================================================== */
+.deznav {
+    width: var(--sidebar-width);
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    background-color: #ffffff;
+    border-right: 1px solid #e9ecef;
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.deznav .nav-header {
+    height: var(--header-height);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1.2rem;
+    background: linear-gradient(135deg, #569208 0%, #3d6a05 100%) !important;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(86, 146, 8, 0.25);
+    border-bottom: none;
+}
+
+.deznav .nav-header .sidebar-bg-circle-1 {
+    position: absolute;
+    width: 110px;
+    height: 110px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 50%;
+    top: -30px;
+    right: -25px;
+    pointer-events: none;
+}
+
+.deznav .nav-header .sidebar-bg-circle-2 {
+    position: absolute;
+    width: 65px;
+    height: 65px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    bottom: -20px;
+    left: 30px;
+    pointer-events: none;
+}
+
+.deznav .sidebar-logo {
+    display: block;
+    max-height: 56px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+}
+
+.deznav .sidebar-logo-icon {
+    display: none;
+    max-height: 44px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+}
+
+.deznav .deznav-scroll {
+    height: calc(100vh - var(--header-height)) !important;
+    overflow-y: auto;
+    flex: unset;
+    padding: 0 !important;
+}
+
+
+/* ==========================================================================
+   2. NAVEGACIÓN Y MENÚ LATERAL (METISMENU)
+   ========================================================================== */
+.deznav .sidebar-profile-card {
+    background-color: #f8fafc;
+    border: 1px solid #f1f5f9;
+    transition: all 0.3s ease;
+}
+
+.deznav .metismenu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.deznav .metismenu li {
+    margin: 0.5rem 0.9rem;
+}
+
+.deznav .metismenu li a {
+    display: flex;
+    align-items: center;
+    padding: 0.9rem 1.15rem;
+    color: #475569;
+    text-decoration: none;
+    border-radius: 12px;
+    font-size: 1.05rem;
+    font-weight: 500;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.deznav .metismenu li a i {
+    font-size: 1.5rem;
+    min-width: 2.3rem;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease;
+}
+
+.deznav .metismenu li a .nav-text {
+    margin-left: 0.75rem;
+    white-space: nowrap;
+}
+
+.deznav .metismenu li:hover > a {
+    color: var(--primary-hover);
+    background-color: rgba(86, 146, 8, 0.12);
+}
+
+.deznav .metismenu li.mm-active > a {
+    color: var(--text-contrast) !important;
+    background-color: var(--primary-color) !important;
+    font-weight: 700;
+    box-shadow: 0 6px 18px rgba(86, 146, 8, 0.35);
+}
+
+.deznav .metismenu li.mm-active > a i {
+    color: var(--text-contrast) !important;
+}
+
+
+/* ==========================================================================
+   4. TOPBAR (OCUPA TODA LA PANTALLA Y SE ADAPTA AL SIDEBAR)
+   ========================================================================== */
+.header {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: calc(100% - var(--sidebar-width));
+    height: var(--header-height);
+    background-color: #ffffff;
+    border-bottom: 1px solid #e9ecef;
+    z-index: 1000;
+    overflow: hidden; /* <-- Esto fuerza a que los círculos no salgan de la topbar */
+    transition: width 0.3s ease, margin-left 0.3s ease;
+}
+
+.header .header-content {
+    height: 100%;
+}
+
+/* 7 Círculos decorativos grises distribuidos por toda la topbar */
+.header-dec-circle-1 {
+    position: absolute;
+    width: 90px;
+    height: 90px;
+    background: rgba(0, 0, 0, 0.025);
+    border-radius: 50%;
+    top: -25px;
+    left: 5%;
+    pointer-events: none;
+}
+
+.header-dec-circle-2 {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 50%;
+    bottom: -15px;
+    left: 20%;
+    pointer-events: none;
+}
+
+.header-dec-circle-3 {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background: rgba(0, 0, 0, 0.025);
+    border-radius: 50%;
+    top: -30px;
+    left: 38%;
+    pointer-events: none;
+}
+
+.header-dec-circle-4 {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: rgba(0, 0, 0, 0.015);
+    border-radius: 50%;
+    bottom: -10px;
+    left: 52%;
+    pointer-events: none;
+}
+
+.header-dec-circle-5 {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 50%;
+    top: -20px;
+    right: 32%;
+    pointer-events: none;
+}
+
+.header-dec-circle-6 {
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    background: rgba(0, 0, 0, 0.025);
+    border-radius: 50%;
+    bottom: -20px;
+    right: 15%;
+    pointer-events: none;
+}
+
+.header-dec-circle-7 {
+    position: absolute;
+    width: 55px;
+    height: 55px;
+    background: rgba(0, 0, 0, 0.015);
+    border-radius: 50%;
+    top: -15px;
+    right: 3%;
+    pointer-events: none;
+}
+
+
+/* ==========================================================================
+   5. CUERPO DE LA VISTA Y FOOTER ADAPTADO
+   ========================================================================== */
+.content-body {
+    flex: 1 0 auto;
+    margin-left: var(--sidebar-width);
+    padding-top: calc(var(--header-height) + 1.5rem);
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-bottom: 70px !important;
+    transition: margin-left 0.3s ease;
+}
+
+/* FOOTER AL 100% CON PIEZA LATERAL */
+.footer {
+    position: fixed !important;
+    bottom: 0;
+    left: 0;
+    width: 100% !important;
+    margin-left: 0 !important;
+    height: 57px !important;
+    z-index: 1050;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, #569208 0%, #3d6a05 100%) !important;
+}
+
+.footer-sidebar-piece {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: var(--sidebar-width);
+    height: 100%;
+    background: linear-gradient(135deg, #569208 0%, #3d6a05 100%) !important;
+    overflow: hidden;
+    z-index: 2;
+    transition: width 0.3s ease;
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.footer .container-fluid {
+    width: 100% !important;
+    padding-left: calc(var(--sidebar-width) + 1.5rem) !important;
+    padding-right: 2rem !important;
+    z-index: 3;
+}
+
+
+/* ==========================================================================
+   6. ESTADO COLAPSADO (SIDEBAR MINI)
+   ========================================================================== */
+body.sidebar-collapsed {
+    & .deznav {
+        width: var(--sidebar-collapsed-width);
+
+        & .sidebar-profile-card,
+        & .nav-label {
+            display: none !important;
+        }
+
+        & .metismenu li {
+            margin: 0.6rem 0.6rem;
+        }
+
+        & .metismenu li a {
+            padding: 1rem 0;
+            justify-content: center;
+        }
+
+        & .metismenu li a i {
+            font-size: 1.7rem;
+            min-width: unset;
+            margin: 0;
+        }
+
+        & .nav-text, 
+        & .sidebar-logo {
+            display: none !important;
+        }
+
+        & .sidebar-logo-icon {
+            display: block !important;
+        }
+    }
+
+    & .header,
+    & .content-body {
+        width: calc(100% - var(--sidebar-collapsed-width));
+        margin-left: var(--sidebar-collapsed-width);
+    }
+
+    & .footer {
+        width: 100% !important;
+        margin-left: 0 !important;
+    }
+
+    & .footer-sidebar-piece {
+        width: var(--sidebar-collapsed-width) !important;
+    }
+
+    & .footer .container-fluid {
+        padding-left: calc(var(--sidebar-collapsed-width) + 1.5rem) !important;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*APARTIR DE AQUÍ COMIENZA EL CSS DE FOOTER QUE SE AJUSTA AL SIDEBAR*/
+/* ==========================================================================
+   ESTILOS CREATIVOS Y CÍRCULOS DECORATIVOS DEL FOOTER
+   ========================================================================== */
+.footer.bg-gradient-primary {
+    background: linear-gradient(135deg, #569208 0%, #3d6a05 100%) !important;
+}
+
+.footer .text-white-80 {
+    color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.footer-dec-circle-1 {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 50%;
+    top: -20px;
+    right: 20px;
+    pointer-events: none;
+}
+
+.footer-dec-circle-2 {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    bottom: -15px;
+    left: 40px;
+    pointer-events: none;
+}

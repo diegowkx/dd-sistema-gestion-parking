@@ -1,0 +1,89 @@
+/* ==========================================================================
+   ESTILOS PERSONALIZADOS DEL DASHBOARD (dashboard.css)
+   ========================================================================== */
+
+.font-primary-family {
+
+    /* Colores y Utilidades de Texto (#569208) */
+    & .text-accent {
+        color: #569208 !important;
+    }
+
+    & .icon-accent {
+        color: #569208;
+    }
+
+    & .fs-7 {
+        font-size: 0.8rem;
+    }
+
+    /* Tarjetas del Dashboard */
+    & .dashboard-card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+        background-color: #ffffff;
+    }
+
+    /* Tarjetas KPI de Resumen */
+    & .card-kpi {
+        border-radius: 18px;
+        background-color: #ffffff;
+
+        &.kpi-accent,
+        &.kpi-danger {
+            border: 2px solid #569208 !important;
+        }
+
+        &.kpi-success {
+            border: 2px solid #28a745 !important;
+        }
+    }
+
+    /* Cajas Contenedoras de Iconos KPI */
+    & .kpi-icon-box {
+        padding: 1rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &.bg-soft-accent,
+        &.bg-soft-danger {
+            background-color: #edf6e5; /* Fondo verde suave para el ícono */
+        }
+
+        &.bg-soft-success {
+            background-color: #e8f5e9;
+        }
+    }
+
+    /* Filtros y Form Control */
+    & .filter-input {
+        border-color: #6c757d;
+        font-family: var(--font-secondary-id);
+        font-size: 0.9rem;
+    }
+
+    & .btn-filter {
+        background-color: #569208;
+        border-color: #569208;
+        color: #ffffff;
+        font-family: var(--font-primary-id);
+        padding: 0.5rem 1.25rem;
+        border-radius: 6px;
+
+        &:hover {
+            background-color: #437306;
+            border-color: #437306;
+            color: #ffffff;
+        }
+    }
+
+    /* Elementos Auxiliares del Modal */
+    & .badge-dark-custom {
+        background-color: #1e293b;
+        color: #ffffff;
+        padding: 0.4em 0.8em;
+    }
+}

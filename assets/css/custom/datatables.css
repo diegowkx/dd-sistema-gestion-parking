@@ -1,0 +1,207 @@
+/* ==========================================================================
+   ESTILOS CENTRALIZADOS DE DATATABLES V2.X (datatables.css)
+   ========================================================================== */
+
+/* 1. TIPOGRAFÍA SECUNDARIA Y FUERZA BRUTA PARA DATATABLES V2 */
+.dt-container,
+.dt-container *,
+.dt-search,
+.dt-search label,
+.dt-search input,
+.dt-length,
+.dt-length label,
+.dt-length select,
+.dt-info,
+.dt-paging,
+.dt-paging button {
+    font-family: var(--font-secondary-id, system-ui, sans-serif) !important;
+}
+
+/* Contenedor principal */
+.dt-container {
+    font-size: 0.9rem !important;
+    color: #ffffff !important;
+}
+
+/* 2. CONTROLES: "MOSTRAR REGISTROS" Y "BUSCAR" */
+.dt-container .dt-search label,
+.dt-container .dt-length label {
+    color: #475569 !important;
+    font-weight: 500 !important;
+}
+
+.dt-container .dt-length select {
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 8px !important;
+    padding: 0.35rem 0.6rem !important;
+    background-color: #ffffff !important;
+    color: #334155 !important;
+    outline: none !important;
+}
+
+.dt-container .dt-search input {
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 8px !important;
+    padding: 0.35rem 0.75rem !important;
+    background-color: #ffffff !important;
+    color: #334155 !important;
+    outline: none !important;
+    margin-left: 0.5rem !important;
+}
+
+.dt-container .dt-search input:focus,
+.dt-container .dt-length select:focus {
+    border-color: #569208 !important;
+    box-shadow: 0 0 0 3px rgba(86, 146, 8, 0.15) !important;
+}
+
+/* 3. TABLA Y CELDAS */
+table.dataTable {
+    width: 100% !important;
+    border-collapse: separate !important;
+    border-spacing: 0 0.4rem !important;
+    border: none !important;
+}
+
+table.dataTable thead th {
+    font-family: var(--font-secondary-id, system-ui, sans-serif) !important;
+    font-weight: 700 !important;
+    color: #475569 !important;
+    background-color: #f8fafc !important;
+    border-bottom: 2px solid #e2e8f0 !important;
+    padding: 0.85rem 1rem !important;
+    font-size: 0.85rem !important;
+    text-transform: uppercase !important;
+}
+
+table.dataTable tbody td {
+    font-family: var(--font-secondary-id, system-ui, sans-serif) !important;
+    padding: 0.85rem 1rem !important;
+    vertical-align: middle !important;
+    color: #334155 !important;
+    background-color: #ffffff !important;
+    border-top: 1px solid #f1f5f9 !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+}
+
+table.dataTable tbody tr:hover td {
+    background-color: rgba(86, 146, 8, 0.04) !important;
+}
+
+/* 4. TEXTO DE INFORMACIÓN DE PIE */
+.dt-container .dt-info {
+    font-family: var(--font-secondary-id, system-ui, sans-serif) !important;
+    color: #64748b !important;
+    padding-top: 1rem !important;
+    font-size: 0.875rem !important;
+}
+
+/* ==========================================================================
+   5. PAGINACIÓN DATATABLES V2 - CIRCULAR Y EN VERDE (#569208)
+   ========================================================================== */
+
+/* Contenedor general */
+.dt-container .dt-paging {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 6px !important;
+    padding-top: 0.85rem !important;
+}
+
+/* Base circular para TODOS los botones */
+.dt-container .dt-paging button.dt-paging-button {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border-radius: 50% !important; /* Círculo perfecto */
+    border: none !important;
+    background: #f1f5f9 !important; /* Gris claro opaco base */
+    color: #475569 !important;
+    font-family: var(--font-secondary-id, system-ui, sans-serif) !important;
+    font-weight: 700 !important;
+    font-size: 0.875rem !important;
+    outline: none !important;
+    box-shadow: none !important;
+    cursor: pointer !important;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Forzar que los span con números dentro del botón se mantengan visibles */
+.dt-container .dt-paging button.dt-paging-button * {
+    font-size: 0.875rem !important;
+    color: inherit !important;
+}
+
+/* Ocultar texto ÚNICAMENTE en botones de navegación (flechas) */
+.dt-container .dt-paging button.dt-paging-button.first,
+.dt-container .dt-paging button.dt-paging-button.previous,
+.dt-container .dt-paging button.dt-paging-button.next,
+.dt-container .dt-paging button.dt-paging-button.last {
+    color: transparent !important;
+    font-size: 0 !important;
+}
+
+/* Inyección de FontAwesome en botones de navegación */
+.dt-container .dt-paging button.dt-paging-button.first::before,
+.dt-container .dt-paging button.dt-paging-button.previous::before,
+.dt-container .dt-paging button.dt-paging-button.next::before,
+.dt-container .dt-paging button.dt-paging-button.last::before {
+    font-family: "Font Awesome 6 Free", "Font Awesome 5 Free", FontAwesome !important;
+    font-weight: 900 !important;
+    font-size: 0.85rem !important;
+    color: #475569 !important;
+    display: inline-block !important;
+}
+
+.dt-container .dt-paging button.dt-paging-button.first::before { content: "\f100" !important; }    /* angle-double-left */
+.dt-container .dt-paging button.dt-paging-button.previous::before { content: "\f104" !important; } /* angle-left */
+.dt-container .dt-paging button.dt-paging-button.next::before { content: "\f105" !important; }     /* angle-right */
+.dt-container .dt-paging button.dt-paging-button.last::before { content: "\f101" !important; }     /* angle-double-right */
+
+/* PÁGINA ACTIVA EN VERDE SISTEMA (#569208) */
+.dt-container .dt-paging button.dt-paging-button.current,
+.dt-container .dt-paging button.dt-paging-button.current:hover,
+.dt-container .dt-paging button.dt-paging-button.current:focus {
+    background: #569208 !important;
+    color: #ffffff !important;
+    border-radius: 50% !important;
+    box-shadow: 0 4px 12px rgba(86, 146, 8, 0.35) !important;
+    transform: scale(1.05) !important;
+    border: none !important;
+}
+
+.dt-container .dt-paging button.dt-paging-button.current * {
+    color: #ffffff !important;
+}
+
+/* HOVER EN BOTONES Y FLECHAS HABILITADAS */
+.dt-container .dt-paging button.dt-paging-button:hover:not(.current):not([disabled]):not(.disabled) {
+    background: rgba(86, 146, 8, 0.15) !important;
+    color: #569208 !important;
+    transform: translateY(-2px) scale(1.08) !important;
+}
+
+.dt-container .dt-paging button.dt-paging-button:hover:not(.current):not([disabled]):not(.disabled)::before {
+    color: #569208 !important;
+}
+
+/* FLECHAS DESHABILITADAS (Sin hover y suaves) */
+.dt-container .dt-paging button.dt-paging-button[disabled],
+.dt-container .dt-paging button.dt-paging-button.disabled {
+    background: transparent !important;
+    opacity: 0.35 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.dt-container .dt-paging button.dt-paging-button[disabled]::before,
+.dt-container .dt-paging button.dt-paging-button.disabled::before {
+    color: #cbd5e1 !important;
+}

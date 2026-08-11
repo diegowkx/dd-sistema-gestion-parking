@@ -1,12 +1,17 @@
 $(document).ready(function() {
 
-    // Silenciar alertas de error de DataTables
+    // Silenciar alertas de error nativas de DataTables
     $.fn.dataTable.ext.errMode = 'none';
 
+    // Inicializar instancia de Modal solo si existe el elemento en el DOM y Bootstrap está disponible
     const modalElement = document.getElementById('modalIpDetalle');
-    const modalIp = modalElement ? new bootstrap.Modal(modalElement) : null;
+    let modalIp = null;
+    
+    if (modalElement && typeof bootstrap !== 'undefined') {
+        modalIp = new bootstrap.Modal(modalElement);
+    }
 
-    // Configuración de Idioma en Español
+    // Configuración de Idioma en Español para DataTables
     const lenguajeEspanol = {
         processing:     "Procesando...",
         search:         "Buscar:",
@@ -30,26 +35,22 @@ $(document).ready(function() {
         }
     };
 
-    // Función para reestructurar la paginación y eliminar bordes/hovers naranjas nativos
+    // Función para reestructurar la paginación de DataTables
     function corregirPaginacionJS(settings) {
         const $wrapper = $(settings.nTableWrapper);
         const $paginate = $wrapper.find('.dataTables_paginate');
 
-        // Limpiar estilos del contenedor principal
         $paginate.attr('style', 'display: flex !important; align-items: center !important; justify-content: flex-end !important; padding-top: 8px !important; background: transparent !important; border: none !important;');
 
-        // Eliminar contenedor de barra inferior que genera la línea naranja en DataTables
         $wrapper.find('.dataTables_scrollBody, .dataTables_wrapper').css({
             'border': 'none',
             'box-shadow': 'none',
             'outline': 'none'
         });
 
-        // Iterar todos los elementos de paginación dentro (Anterior, números, Siguiente)
         $paginate.find('a, span, .paginate_button').each(function() {
             const $btn = $(this);
             
-            // Remover estilos/clases nativas que disparan el naranja
             $btn.removeClass('paginate_button').css({
                 'background': 'none',
                 'border': 'none',
@@ -93,7 +94,6 @@ $(document).ready(function() {
                 `);
             }
 
-            // Manejo de Hover por JS puro (sin CSS externo)
             $btn.off('mouseenter mouseleave').on('mouseenter', function() {
                 if (esDeshabilitado) return;
                 if (esActivo) {
@@ -115,169 +115,49 @@ $(document).ready(function() {
     }
 
     // ==========================================
-    // 1. CARGAR MÉTRICAS
+    // DATATABLE: AUDITORÍA / HISTORIAL DE IPS
     // ==========================================
-    function cargarMetricas() {
-        const fechaInicio = $('#fecha_inicio').val();
-        const fechaFin = $('#fecha_fin').val();
-
-        $.ajax({
-            url: `?c=dashboard&a=getMetricas&fecha_inicio=${fechaInicio}&fecha_fin=${fechaFin}`,
-            type: 'GET',
-            dataType: 'json',
-            success: function(res) {
-                if (res.success) {
-                    $('#lbl_total_ventas').text(res.data.total_ventas);
-                    $('#lbl_ingreso_total').text(`S/ ${res.data.ingreso_total}`);
+    if ($('#datatable_ips').length) {
+        $('#datatable_ips').DataTable({
+            autoWidth: false,
+            responsive: true,
+            bDestroy: true,
+            pagingType: 'simple_numbers',
+            ajax: {
+                url: '?c=dashboard&a=listarIps',
+                dataSrc: 'data'
+            },
+            columns: [
+                { data: 'usuario_username', render: function(d) { return `<strong>${d}</strong>`; } },
+                { data: 'usuario_nombre_completo' },
+                { data: 'rol_name', render: function(d) { return `<span class="badge text-white" style="background-color: #6f42c1;">${d}</span>`; } },
+                { data: 'ip_address', render: function(d) { return `<code class="text-danger fw-bold">${d}</code>`; } },
+                { data: 'fecha_acceso' },
+                {
+                    data: null,
+                    orderable: false,
+                    className: 'text-center',
+                    render: function(row) {
+                        return `
+                            <button type="button" class="btn btn-ver-ip rounded-circle text-white shadow-sm" data-id="${row.id}" style="width: 32px; height: 32px; padding:0; background-color: #d9383a; border: none;">
+                                <i class="fas fa-eye text-white"></i>
+                            </button>`;
+                    }
                 }
+            ],
+            language: lenguajeEspanol,
+            drawCallback: function(settings) {
+                corregirPaginacionJS(settings);
             }
         });
     }
 
-    cargarMetricas();
-    $('#btn_filtrar').on('click', function() { cargarMetricas(); });
-
     // ==========================================
-    // 2. DATATABLE: OPERACIONES (ENTREGAS/DEVOLUCIONES)
+    // LÓGICA DEL MODAL DE AUDITORÍA DE IP
     // ==========================================
-    $('#datatable_operaciones').DataTable({
-        autoWidth: false,
-        responsive: true,
-        bDestroy: true,
-        pagingType: 'simple_numbers',
-        ajax: {
-            url: '?c=dashboard&a=getOperacionesProximas',
-            dataSrc: 'data'
-        },
-        columns: [
-            { 
-                data: 'numero_contrato',
-                render: function(data) { return `<span class="fw-bold">#${data}</span>`; }
-            },
-            { data: 'cliente_nombre' },
-            { 
-                data: null,
-                render: function(row) {
-                    return `<strong>${row.vehiculo}</strong> <span class="badge bg-dark ms-1">${row.placa}</span>`;
-                }
-            },
-            { 
-                data: 'tipo_operacion',
-                render: function(data) {
-                    return data === 'ENTREGA' 
-                        ? `<span class="badge text-white px-2 py-1" style="background-color: #6f42c1;"><i class="fas fa-key me-1"></i>ENTREGA</span>`
-                        : `<span class="badge bg-warning text-dark px-2 py-1"><i class="fas fa-undo me-1"></i>DEVOLUCIÓN</span>`;
-                }
-            },
-            { data: 'fecha_programada' },
-            { 
-                data: 'estado',
-                render: function(data) {
-                    return `<span class="badge text-white px-2 py-1 fw-bold" style="background-color: #28a745;">${data}</span>`;
-                }
-            }
-        ],
-        language: lenguajeEspanol,
-        drawCallback: function(settings) {
-            corregirPaginacionJS(settings);
-        }
-    });
-
-    // ==========================================
-    // 3. DATATABLE: ESTADO DE FLOTA
-    // ==========================================
-    $('#datatable_flota').DataTable({
-        autoWidth: false,
-        responsive: true,
-        bDestroy: true,
-        pagingType: 'simple_numbers',
-        ajax: {
-            url: '?c=dashboard&a=getEstadoFlota',
-            dataSrc: 'data'
-        },
-        columns: [
-            { data: 'placa', render: function(d) { return `<span class="badge bg-dark">${d}</span>`; } },
-            { data: null, render: function(r) { return `<strong>${r.marca} ${r.modelo}</strong>`; } },
-            { data: 'precio_base_dia', render: function(d) { return `S/ ${parseFloat(d).toFixed(2)}`; } },
-            { 
-                data: 'estado_disponibilidad',
-                render: function(d) {
-                    if (d === 'DISPONIBLE') return `<span class="badge bg-success">DISPONIBLE</span>`;
-                    if (d === 'ALQUILADO') return `<span class="badge bg-danger">ALQUILADO</span>`;
-                    return `<span class="badge bg-warning text-dark">MANTENIMIENTO</span>`;
-                }
-            },
-            { data: 'cliente_actual', render: function(d) { return d ? `<span class="fw-bold text-danger">${d}</span>` : `-`; } }
-        ],
-        language: lenguajeEspanol,
-        drawCallback: function(settings) {
-            corregirPaginacionJS(settings);
-        }
-    });
-
-    // ==========================================
-    // 4. DATATABLE: TOP CLIENTES
-    // ==========================================
-    $('#datatable_top_clientes').DataTable({
-        autoWidth: false,
-        responsive: true,
-        bDestroy: true,
-        pagingType: 'simple_numbers',
-        ajax: {
-            url: '?c=dashboard&a=getTopClientes',
-            dataSrc: 'data'
-        },
-        columns: [
-            { data: 'cliente_nombre', render: function(d) { return `<strong>${d}</strong>`; } },
-            { data: 'total_alquileres', className: 'text-center' },
-            { data: 'total_gastado', render: function(d) { return `S/ ${parseFloat(d).toFixed(2)}`; } }
-        ],
-        language: lenguajeEspanol,
-        drawCallback: function(settings) {
-            corregirPaginacionJS(settings);
-        }
-    });
-
-    // ==========================================
-    // 5. DATATABLE: AUDITORÍA / HISTORIAL DE IPS
-    // ==========================================
-    $('#datatable_ips').DataTable({
-        autoWidth: false,
-        responsive: true,
-        bDestroy: true,
-        pagingType: 'simple_numbers',
-        ajax: {
-            url: '?c=dashboard&a=listarIps',
-            dataSrc: 'data'
-        },
-        columns: [
-            { data: 'usuario_username', render: function(d) { return `<strong>${d}</strong>`; } },
-            { data: 'usuario_nombre_completo' },
-            { data: 'rol_name', render: function(d) { return `<span class="badge text-white" style="background-color: #6f42c1;">${d}</span>`; } },
-            { data: 'ip_address', render: function(d) { return `<code class="text-danger fw-bold">${d}</code>`; } },
-            { data: 'fecha_acceso' },
-            {
-                data: null,
-                orderable: false,
-                className: 'text-center',
-                render: function(row) {
-                    return `
-                        <button type="button" class="btn btn-ver-ip rounded-circle text-white shadow-sm" data-id="${row.id}" style="width: 32px; height: 32px; padding:0; background-color: #d9383a; border: none;">
-                            <i class="fas fa-eye text-white"></i>
-                        </button>`;
-                }
-            }
-        ],
-        language: lenguajeEspanol,
-        drawCallback: function(settings) {
-            corregirPaginacionJS(settings);
-        }
-    });
-
-    // Modal Auditoría IP
     document.addEventListener('click', function(e) {
         const btnVerIp = e.target.closest('.btn-ver-ip');
-        if (btnVerIp && modalIp) {
+        if (btnVerIp) {
             const id = btnVerIp.getAttribute('data-id');
             fetch(`?c=dashboard&a=getIpById&id=${id}`)
                 .then(r => r.json())
@@ -291,7 +171,13 @@ $(document).ready(function() {
                         document.getElementById('det_ip_rol').innerText = d.rol_name;
                         document.getElementById('det_ip_address').innerText = d.ip_address;
                         document.getElementById('det_ip_fecha').innerText = d.fecha_acceso;
-                        modalIp.show();
+                        
+                        if (!modalIp && modalElement && typeof bootstrap !== 'undefined') {
+                            modalIp = new bootstrap.Modal(modalElement);
+                        }
+                        if (modalIp) {
+                            modalIp.show();
+                        }
                     }
                 });
         }

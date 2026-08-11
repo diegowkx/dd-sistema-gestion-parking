@@ -1,0 +1,204 @@
+/* ==========================================================================
+   ESTILOS ESPECÍFICOS DEL MÓDULO LOGIN
+   ========================================================================== */
+
+.login-split-container {
+    display: flex;
+    min-height: 100vh;
+    width: 100vw;
+    background-color: #f4f6f9;
+}
+
+.login-banner-side {
+    flex: 1;
+    position: relative;
+    background: linear-gradient(135deg, #1e1e2f 0%, #d9383a 100%);
+    clip-path: polygon(0 0, 100% 0, 85% 100%, 0 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    & .login-banner-overlay {
+        color: #ffffff;
+        text-align: center;
+        padding: 2rem;
+
+        & h2 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        & p {
+            font-size: 1.1rem;
+            opacity: 0.85;
+        }
+    }
+}
+
+.login-form-side {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    margin-left: -5%;
+    z-index: 2;
+}
+
+/* Reglas aplicadas al contenedor abstracto */
+.font-primary-family {
+
+    & .login-card-box {
+        width: 100%;
+        max-width: 420px;
+        background: #ffffff;
+        padding: 2.5rem;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+
+        & .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+
+            & .brand-logo {
+                font-size: 1.8rem;
+                color: #d9383a;
+                text-decoration: none;
+                display: block;
+                margin-bottom: 0.5rem;
+            }
+
+            & .login-title {
+                font-size: 1.25rem;
+                color: #495057;
+            }
+        }
+
+        & .login-form {
+
+            & .form-group {
+                margin-bottom: 1.25rem;
+
+                & label {
+                    display: block;
+                    margin-bottom: 0.4rem;
+                    font-size: 0.9rem;
+                    color: #212529;
+                }
+
+                /* Consumo de la fuente mediante el ID Genérico */
+                & input.form-control,
+                & input.custom-input {
+                    font-family: var(--font-primary-id);
+                    width: 100%;
+                    padding: 0.75rem 1rem;
+                    border: 1px solid #ced4da;
+                    border-radius: 6px;
+                    font-size: 0.95rem;
+                    background-color: #f8f9fa;
+                    transition: all 0.2s ease-in-out;
+
+                    &:focus {
+                        outline: none;
+                        background-color: #ffffff;
+                        border-color: #d9383a;
+                        box-shadow: 0 0 0 3px rgba(217, 56, 58, 0.15);
+                    }
+                }
+            }
+
+            & .password-wrapper {
+                position: relative;
+                display: flex;
+                align-items: center;
+                width: 100%;
+
+                & input {
+                    padding-right: 45px !important;
+                }
+
+                & .password-toggle-btn {
+                    position: absolute;
+                    right: 12px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    background: transparent;
+                    border: none;
+                    cursor: pointer;
+                    color: #6c757d;
+                    font-size: 1.1rem;
+                    padding: 4px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 5;
+
+                    &:hover {
+                        color: #d9383a;
+                    }
+
+                    &:focus {
+                        outline: none;
+                    }
+                }
+            }
+
+            /* Consumo de la fuente mediante el ID Genérico */
+            & .btn-custom-submit {
+                font-family: var(--font-primary-id);
+                width: 100%;
+                padding: 0.8rem;
+                background-color: #d9383a;
+                color: #ffffff;
+                border: none;
+                border-radius: 6px;
+                font-size: 1rem;
+                cursor: pointer;
+                margin-top: 0.5rem;
+                transition: background-color 0.2s ease;
+
+                &:hover {
+                    background-color: #b82c2e;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 991px) {
+    .login-split-container {
+        flex-direction: column;
+    }
+
+    .login-banner-side {
+        display: none;
+    }
+
+    .login-form-side {
+        margin-left: 0;
+        min-height: 100vh;
+    }
+}
+
+/* Estilos base del campo y fuente secundaria */
+& input.form-control,
+& input.custom-input {
+    font-family: var(--font-secondary-id) !important;
+    font-size: 0.95rem;
+    color: rgba(61, 66, 71, 0.85); /* Texto escrito al 85% de opacidad (0.85) */
+    transition: all 0.2s ease-in-out;
+}
+
+/* Texto de sugerencia cuando NO se ha escrito nada (0.75 de opacidad) */
+& input.form-control::placeholder,
+& input.custom-input::placeholder {
+    opacity: 0.75;
+    color: #6c757d;
+}
+
+/* Estado activo cuando el usuario ya escribió texto en el campo */
+& input.form-control:not(:placeholder-shown),
+& input.custom-input:not(:placeholder-shown) {
+    opacity: 1;
+    color: rgba(61, 66, 71, 0.85); /* Garantiza el 0.85 al escribir */
+}

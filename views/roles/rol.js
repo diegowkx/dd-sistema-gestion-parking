@@ -70,7 +70,7 @@ $(document).ready(function () {
             {
                 data: 'nombre',
                 render: function (data) {
-                    return `<span class="fw-bold" style="color: #1e293b;">${data}</span>`;
+                    return `<span class="fw-bold text-dark">${data}</span>`;
                 }
             },
             {
@@ -81,7 +81,7 @@ $(document).ready(function () {
                         return '<span class="text-muted">Sin módulos asignados</span>';
                     }
                     return permisos.map(p =>
-                        `<span class="badge bg-secondary me-1 mb-1">${p}</span>`
+                        `<span class="badge bg-secondary me-1 mb-1 fs-7">${p}</span>`
                     ).join('');
                 }
             },
@@ -89,8 +89,8 @@ $(document).ready(function () {
                 data: 'activo',
                 render: function (data) {
                     return data == 1
-                        ? '<span class="badge bg-success">ACTIVO</span>'
-                        : '<span class="badge bg-danger">INACTIVO</span>';
+                        ? '<span class="badge bg-success px-3 py-2">ACTIVO</span>'
+                        : '<span class="badge bg-danger px-3 py-2">INACTIVO</span>';
                 }
             },
             {
@@ -100,22 +100,31 @@ $(document).ready(function () {
                 render: function (row) {
                     const jsonRol = encodeURIComponent(JSON.stringify(row));
 
+                    // SVG de Lápiz (Editar)
+                    const svgEditar = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>`;
+
+                    // SVG de Usuario Desactivar
+                    const svgDesactivar = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="17" y1="8" x2="22" y2="13"/><line x1="22" y1="8" x2="17" y2="13"/></svg>`;
+
+                    // SVG de Usuario Restaurar / Check
+                    const svgRestaurar = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></svg>`;
+
                     let botones = `
-                        <button type="button" class="btn btn-warning text-white btn-editar-rol rounded-circle" data-rol="${jsonRol}" style="width: 36px; height: 36px; padding: 0; display: inline-flex; align-items: center; justify-content: center;" title="Editar">
-                            <i class="fas fa-pencil-alt fs-6"></i>
+                        <button type="button" class="btn btn-warning text-white btn-editar-rol rounded-circle shadow-sm" data-rol="${jsonRol}" style="width: 36px; height: 36px; padding: 0; display: inline-flex; align-items: center; justify-content: center;" title="Editar">
+                            ${svgEditar}
                         </button>
                     `;
 
                     if (row.activo == 1) {
                         botones += `
-                            <button type="button" class="btn btn-danger btn-desactivar-rol rounded-circle" data-id="${row.id}" data-nombre="${row.nombre}" style="width: 36px; height: 36px; padding: 0; display: inline-flex; align-items: center; justify-content: center;" title="Desactivar">
-                                <i class="fas fa-user-slash text-white fs-6"></i>
+                            <button type="button" class="btn btn-danger btn-desactivar-rol rounded-circle shadow-sm" data-id="${row.id}" data-nombre="${row.nombre}" style="width: 36px; height: 36px; padding: 0; display: inline-flex; align-items: center; justify-content: center;" title="Desactivar">
+                                ${svgDesactivar}
                             </button>
                         `;
                     } else {
                         botones += `
-                            <button type="button" class="btn btn-success btn-restaurar-rol rounded-circle" data-id="${row.id}" data-nombre="${row.nombre}" style="width: 36px; height: 36px; padding: 0; display: inline-flex; align-items: center; justify-content: center;" title="Restaurar">
-                                <i class="fas fa-user-check text-white fs-6"></i>
+                            <button type="button" class="btn btn-success btn-restaurar-rol rounded-circle shadow-sm" data-id="${row.id}" data-nombre="${row.nombre}" style="width: 36px; height: 36px; padding: 0; display: inline-flex; align-items: center; justify-content: center;" title="Restaurar">
+                                ${svgRestaurar}
                             </button>
                         `;
                     }
@@ -125,10 +134,6 @@ $(document).ready(function () {
             }
         ],
         language: {
-            paginate: {
-                next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
-                previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>'
-            },
             search: "Buscar:",
             lengthMenu: "Mostrar _MENU_ registros",
             zeroRecords: "No se encontraron roles",
@@ -140,7 +145,7 @@ $(document).ready(function () {
         }
     });
 
-    // Cambiar Pestañas
+    // Cambiar Pestañas (Se delega el estado activo y recarga de Ajax)
     document.querySelectorAll('#pills-tab-roles .tab-estado').forEach(btn => {
         btn.addEventListener('click', function () {
             document.querySelectorAll('#pills-tab-roles .tab-estado').forEach(b => b.classList.remove('active'));
@@ -222,8 +227,8 @@ $(document).ready(function () {
                 text: `¿Deseas desactivar el rol "${nombre}"? Los usuarios con este rol no podrán iniciar sesión hasta reasignarlos.`,
                 icon: 'warning',
                 showCancelButton: true,
-                cancelButtonColor: '#34495e',
                 confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
                 confirmButtonText: 'Sí, Desactivar',
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
@@ -236,7 +241,12 @@ $(document).ready(function () {
                         .then(data => {
                             if (data.success) {
                                 tabla.ajax.reload(null, false);
-                                Swal.fire('Desactivado', data.message, 'success');
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Desactivado',
+                                    text: data.message,
+                                    confirmButtonColor: '#569208'
+                                });
                             } else {
                                 Swal.fire('Error', data.message || 'Error al desactivar', 'error');
                             }
@@ -257,7 +267,7 @@ $(document).ready(function () {
                 text: `¿Deseas volver a activar el rol "${nombre}"?`,
                 icon: 'question',
                 showCancelButton: true,
-                confirmButtonColor: '#198754',
+                confirmButtonColor: '#569208',
                 cancelButtonColor: '#6c757d',
                 confirmButtonText: 'Sí, Restaurar',
                 cancelButtonText: 'Cancelar'
@@ -271,7 +281,12 @@ $(document).ready(function () {
                         .then(data => {
                             if (data.success) {
                                 tabla.ajax.reload(null, false);
-                                Swal.fire('Restaurado', data.message, 'success');
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Restaurado',
+                                    text: data.message,
+                                    confirmButtonColor: '#569208'
+                                });
                             } else {
                                 Swal.fire('Error', data.message || 'Error al restaurar', 'error');
                             }
@@ -329,7 +344,12 @@ $(document).ready(function () {
                 if (rolModal) rolModal.hide();
                 tabla.ajax.reload(null, false);
 
-                Swal.fire('¡Éxito!', data.message, 'success');
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: data.message,
+                    confirmButtonColor: '#569208'
+                });
 
             } catch (err) {
                 Swal.fire('Error', err.message || 'Error en el servidor', 'error');

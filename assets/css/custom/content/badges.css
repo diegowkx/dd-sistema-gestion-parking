@@ -1,0 +1,16 @@
+/* ==========================================================================
+   ESTRUCTURA Y DISEÑO DE BADGES (badges.css)
+   ========================================================================== */
+
+.badge-custom-dark {
+    background-color: #1e293b;
+    color: #ffffff;
+    padding: 0.4em 0.8em;
+    border-radius: 6px;
+}
+
+.badge-pill-glow {
+    background-color: rgba(86, 146, 8, 0.12);
+    color: #569208;
+    border-radius: 50px;
+}

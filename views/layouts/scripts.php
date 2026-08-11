@@ -1,5 +1,5 @@
 <!--==================================================-->
-<!--                SCRIPTS VENDORS CORE              -->
+<!--                    SCRIPTS VENDORS CORE          -->
 <!--==================================================-->
 
 <!-- 1. JS por defecto global -->
@@ -24,6 +24,22 @@
 <script src="<?php echo BASE_URL; ?>/assets/js/custom/sidebar.js"></script>
 
 
+<!--==================================================-->
+<!--     CARGA AUTOMÁTICA DE SCRIPTS EN JS/CUSTOM/    -->
+<!--==================================================-->
+<?php
+$customJsDir = __DIR__ . '/../../assets/js/custom/';
+if (is_dir($customJsDir)) {
+    foreach (glob($customJsDir . '*.js') as $file) {
+        $fileName = basename($file);
+        // Excluimos el sidebar.js para que no se cargue dos veces si ya está declarado arriba
+        if ($fileName !== 'sidebar.js') {
+            echo '<script src="' . BASE_URL . '/assets/js/custom/' . $fileName . '?v=' . filemtime($file) . '"></script>' . PHP_EOL;
+        }
+    }
+}
+?>
+
 
 <!--==================================================-->
 <!--     CARGA CONDICIONAL DE JS POR MÓDULO ACTUAL    -->
@@ -32,11 +48,11 @@
 // Detecta el controlador actual
 $controllerName = strtolower((string)($_GET['c'] ?? $_GET['controller'] ?? 'dashboard'));
 
-// Carga automática del JS correspondiente al módulo actual
-$moduleJs = __DIR__ . '/../../assets/js/custom/' . $controllerName . '.js';
+// Carga automática del JS correspondiente al módulo actual dentro de custom/views/ (si aplica tu estructura)
+$moduleJs = __DIR__ . '/../../assets/js/custom/views/' . $controllerName . '.js';
 
 if (file_exists($moduleJs)) {
-    echo '<script src="' . BASE_URL . '/assets/js/custom/' . $controllerName . '.js?v=' . filemtime($moduleJs) . '"></script>' . PHP_EOL;
+    echo '<script src="' . BASE_URL . '/assets/js/custom/views/' . $controllerName . '.js?v=' . filemtime($moduleJs) . '"></script>' . PHP_EOL;
 }
 
 // JS adicionales opcionales
@@ -51,7 +67,7 @@ if (isset($extra_js) && is_array($extra_js)) {
 ?>
 
 <!--==================================================-->
-<!--          SCRIPTS FUNCIONALES GLOBALES             -->
+<!--             SCRIPTS FUNCIONALES GLOBALES         -->
 <!--==================================================-->
 
 <!-- Perfil de usuario global (Cargado al final de la cadena) -->

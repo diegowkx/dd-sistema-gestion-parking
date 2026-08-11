@@ -1,0 +1,94 @@
+/* ==========================================================================
+   ESTRUCTURA Y DISEÑO DE MODALES Y COMPONENTES CREATIVOS (modals.css)
+   ========================================================================== */
+
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #569208 0%, #3d6a05 100%) !important;
+}
+
+.bg-white-10 { background-color: rgba(255, 255, 255, 0.15); }
+.bg-white-20 { background-color: rgba(255, 255, 255, 0.25); }
+.backdrop-blur { backdrop-filter: blur(8px); }
+
+/* Círculos de fondo para el Header */
+.header-bg-circle-1 {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 50%;
+    top: -50px;
+    right: -20px;
+}
+
+.header-bg-circle-2 {
+    position: absolute;
+    width: 90px;
+    height: 90px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    bottom: -30px;
+    right: 100px;
+}
+
+/* Inputs & Form Floating Creative */
+.form-control-creative {
+    height: 58px !important;
+    background-color: #ffffff !important;
+    font-size: 1rem !important;
+    transition: all 0.25s ease !important;
+}
+
+.form-control-creative:focus {
+    box-shadow: 0 10px 20px rgba(86, 146, 8, 0.12) !important;
+    border: 2px solid #569208 !important;
+}
+
+/* Tarjeta de Permiso */
+.permiso-card-creative {
+    background-color: #f8fafc;
+    border: 1.5px solid #f1f5f9;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.permiso-icon-wrapper {
+    width: 38px;
+    height: 38px;
+    background-color: #e2e8f0;
+    color: #64748b;
+    transition: all 0.2s ease;
+}
+
+.permiso-card-creative:hover {
+    background-color: #ffffff;
+    border-color: #569208;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.04);
+}
+
+/* Checkbox personalizado */
+.chk-permiso-creative {
+    width: 1.25rem !important;
+    height: 1.25rem !important;
+    cursor: pointer;
+    border: 2px solid #cbd5e1 !important;
+}
+
+.chk-permiso-creative:checked {
+    background-color: #569208 !important;
+    border-color: #569208 !important;
+}
+
+.permiso-card-creative:has(.chk-permiso-creative:checked) {
+    background-color: rgba(86, 146, 8, 0.05);
+    border-color: #569208;
+}
+
+.permiso-card-creative:has(.chk-permiso-creative:checked) .permiso-icon-wrapper {
+    background-color: #569208;
+    color: #ffffff;
+}
+
+.shadow-glow {
+    box-shadow: 0 8px 20px rgba(86, 146, 8, 0.35);
+}

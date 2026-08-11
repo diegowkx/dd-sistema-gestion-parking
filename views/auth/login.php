@@ -4,7 +4,7 @@
     <?php include __DIR__ . '/../layouts/head.php'; ?>
 
     <!-- CSS Exclusivo del Login -->
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/custom/login.css">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/custom/views/login.css?v=<?php echo filemtime(__DIR__ . '/../../assets/css/custom/views/login.css'); ?>">
 </head>
 <body class="font-primary-family login-body">
 
@@ -55,7 +55,7 @@
         </div>
     </div>
 
-    <!-- 1. Scripts globales (jQuery, DataTables, SweetAlert2, Config, Profile JS) -->
+    <!-- 1. Scripts globales -->
     <?php include __DIR__ . '/../layouts/scripts.php'; ?>
 
     <!-- 2. Alertas dinámicas con SweetAlert2 -->
@@ -93,10 +93,17 @@
     </script>
     <?php endif; ?>
 
-    <!-- 3. JS de la interfaz general -->
-    <script src="<?php echo BASE_URL; ?>/assets/js/custom/login.js"></script>
-
-    <!-- 4. Script de login -->
-    <script src="<?php echo BASE_URL; ?>/views/auth/login.js?v=<?php echo time(); ?>"></script>
+    <!-- 3. JS Exclusivo del Login (Alineado a la nueva estructura custom/views/) -->
+    <?php 
+    $loginJsPath = __DIR__ . '/../../assets/js/custom/views/login.js';
+    if (file_exists($loginJsPath)) {
+        echo '<script src="' . BASE_URL . '/assets/js/custom/views/login.js?v=' . filemtime($loginJsPath) . '"></script>' . PHP_EOL;
+    }
+    
+    $viewLoginJsPath = __DIR__ . '/../../views/auth/login.js';
+    if (file_exists($viewLoginJsPath)) {
+        echo '<script src="' . BASE_URL . '/views/auth/login.js?v=' . filemtime($viewLoginJsPath) . '"></script>' . PHP_EOL;
+    }
+    ?>
 </body>
 </html>

@@ -6,8 +6,8 @@
 <title><?php echo isset($title) ? $title : 'Sistema de Gestión'; ?> | <?php echo APP_NAME; ?></title>
 <link rel="icon" type="image/png" href="<?php echo BASE_URL; ?>/assets/images/favicon.png">
 
-<!--=================================================-->
-<!--                    CSS BASE Y VENDORS            -->
+<!--==================================================-->
+<!--             CSS BASE Y VENDORS                   -->
 <!--==================================================-->
 
 <!-- Reset y estilos base globales -->
@@ -22,19 +22,41 @@
 <!-- Iconos FontAwesome 6 Local -->
 <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/fontawesome.min.css">
 
-<!-- Componentes y Layout Global -->
-<link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/custom/sidebar.css">
-<link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/custom/components.css">
-<link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/animations/anim_sidebar.css">
-
-<!-- DataTables CSS Global -->
-<link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/custom/datatables.css?v=<?php echo time(); ?>">
-
 <!-- DataTables CSS Local -->
 <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/jquery.dataTables.min.css">
 
 <!-- SweetAlert2 CSS Local -->
 <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/sweetalert2.min.css">
+
+
+<!--==================================================-->
+<!--     CARGA AUTOMÁTICA DE COMPONENTES Y CONTENT    -->
+<!--==================================================-->
+
+<!-- Layout Principal (Components) -->
+<?php
+$componentsDir = __DIR__ . '/../../assets/css/custom/components/';
+if (is_dir($componentsDir)) {
+    foreach (glob($componentsDir . '*.css') as $file) {
+        $fileName = basename($file);
+        echo '<link rel="stylesheet" href="' . BASE_URL . '/assets/css/custom/components/' . $fileName . '?v=' . filemtime($file) . '">' . PHP_EOL;
+    }
+}
+?>
+
+<!-- Estilos Generales y Utilidades (Content) -->
+<?php
+$contentDir = __DIR__ . '/../../assets/css/custom/content/';
+if (is_dir($contentDir)) {
+    foreach (glob($contentDir . '*.css') as $file) {
+        $fileName = basename($file);
+        echo '<link rel="stylesheet" href="' . BASE_URL . '/assets/css/custom/content/' . $fileName . '?v=' . filemtime($file) . '">' . PHP_EOL;
+    }
+}
+?>
+
+<!-- Animaciones Globales -->
+<link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/animations/anim_sidebar.css">
 
 
 <!--==================================================-->
@@ -44,12 +66,12 @@
 // Detecta el controlador actual
 $controllerName = strtolower((string)($_GET['c'] ?? $_GET['controller'] ?? 'dashboard'));
 
-// 1. Carga automática si existe un CSS que coincide con el controlador (ej. dashboard.css o anim_dashboard.css)
-$moduleCss = __DIR__ . '/../../assets/css/custom/' . $controllerName . '.css';
+// 1. Carga automática si existe un CSS que coincide con el controlador dentro de custom/views/
+$moduleCss = __DIR__ . '/../../assets/css/custom/views/' . $controllerName . '.css';
 $moduleAnimCss = __DIR__ . '/../../assets/css/animations/anim_' . $controllerName . '.css';
 
 if (file_exists($moduleCss)) {
-    echo '<link rel="stylesheet" href="' . BASE_URL . '/assets/css/custom/' . $controllerName . '.css?v=' . filemtime($moduleCss) . '">' . PHP_EOL;
+    echo '<link rel="stylesheet" href="' . BASE_URL . '/assets/css/custom/views/' . $controllerName . '.css?v=' . filemtime($moduleCss) . '">' . PHP_EOL;
 }
 
 if (file_exists($moduleAnimCss)) {

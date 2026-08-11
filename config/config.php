@@ -1,7 +1,7 @@
 <?php
 
 // Modo de depuración (true en local, false en producción)
-define('MODO_DEBUG', true);
+define('MODO_DEBUG', false);
 
 if (MODO_DEBUG) {
     ini_set('display_errors', 1);
@@ -12,7 +12,7 @@ if (MODO_DEBUG) {
 }
 
 // URL Base
-define('BASE_URL', 'http://localhost/dd-sistema-gestion-parking');
+define('BASE_URL', 'https://parkquickzone.protechsoluciones.com');
 
 // Nombre del sistema
 define('APP_NAME', 'ParkQuick Zone');
@@ -20,14 +20,14 @@ define('APP_VERSION', '1.0');
 
 // Credenciales de la base de datos 
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'dd_gestion_parking_db');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+define('DB_NAME', 'ene29pro_dd_gestion_parking_db');
+define('DB_USER', 'ene29pro_gestion_parking_db');
+define('DB_PASS', 'admin60780343');
 define('DB_CHARSET', 'utf8mb4');
 
 // Configuración de sesión segura
 if (session_status() === PHP_SESSION_NONE) {
-    session_name('ParkQuickZone_APP_SESSION');
+    session_name('GestCarCore_APP_SESSION');
 
     $isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443);
 
@@ -40,6 +40,10 @@ if (session_status() === PHP_SESSION_NONE) {
     ]);
 
     session_start();
+    
+    // Libera el bloqueo del archivo de sesión inmediatamente
+    // Esto permite que el navegador descargue la página y las peticiones AJAX simultáneamente sin colapsar
+    session_write_close();
 }
 
 // Zona horaria

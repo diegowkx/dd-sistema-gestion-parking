@@ -10,101 +10,6 @@ class Dashboard {
         $this->pdo = $pdo;
     }
 
-    /**
-     * Obtiene el total de contratos de alquiler e ingresos cobrados dentro de un rango de fechas.
-     */
-    public function getIngresosYContratosPorFecha(string $fechaInicio, string $fechaFin): array {
-        $stmt = $this->pdo->prepare("
-            SELECT 
-                COUNT(c.id) AS total_contratos,
-                IFNULL(SUM(cp.monto_total), 0.00) AS ingreso_total
-            FROM contratos_alquiler c
-            LEFT JOIN comprobantes_pago cp ON cp.contrato_id = c.id AND cp.estado_comprobante = 'EMITIDO'
-            WHERE c.estado != 'CANCELADO'
-              AND DATE(c.fecha_hora_salida) BETWEEN :fecha_inicio AND :fecha_fin
-        ");
-
-        $stmt->execute([
-            ':fecha_inicio' => $fechaInicio,
-            ':fecha_fin'    => $fechaFin
-        ]);
-
-        return $stmt->fetch(PDO::FETCH_ASSOC) ?: ['total_contratos' => 0, 'ingreso_total' => '0.00'];
-    }
-
-    /**
-     * Obtiene las próximas entregas y devoluciones programadas.
-     */
-    public function getOperacionesProximas(): array {
-        $stmt = $this->pdo->query("
-            SELECT 
-                c.id AS numero_contrato,
-                cli.razon_social AS cliente_nombre,
-                CONCAT(v.marca, ' ', v.modelo) AS vehiculo,
-                v.placa,
-                'ENTREGA' AS tipo_operacion,
-                c.fecha_hora_salida AS fecha_programada,
-                c.estado
-            FROM contratos_alquiler c
-            INNER JOIN vehiculos v ON c.placa_vehiculo = v.placa
-            INNER JOIN clientes cli ON c.cliente_doc = cli.numero_documento
-            WHERE c.estado IN ('RESERVADO', 'ACTIVO')
-            ORDER BY c.fecha_hora_salida ASC
-            LIMIT 15
-        ");
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    /**
-     * Obtiene el estado actual de disponibilidad de toda la flota de vehículos
-     * junto con el cliente actual en caso de estar alquilado.
-     */
-    public function getEstadoActualFlota(): array {
-        $stmt = $this->pdo->query("
-            SELECT 
-                v.placa, 
-                v.marca,
-                v.modelo,
-                v.anio,
-                v.color,
-                v.tipo_nombre, 
-                v.estado_disponibilidad,
-                v.kilometraje,
-                tv.precio_base_dia,
-                cli.razon_social AS cliente_actual,
-                c.fecha_hora_devolucion_estimada
-            FROM vehiculos v
-            INNER JOIN tipos_vehiculo tv ON v.tipo_nombre = tv.nombre
-            LEFT JOIN contratos_alquiler c ON v.placa = c.placa_vehiculo AND c.estado = 'ACTIVO'
-            LEFT JOIN clientes cli ON c.cliente_doc = cli.numero_documento
-            WHERE v.activo = 1
-            ORDER BY v.marca ASC, v.modelo ASC
-        ");
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    /**
-     * Obtiene los clientes con mayor número de alquileres y gasto acumulado.
-     */
-    public function getTopClientes(): array {
-        $stmt = $this->pdo->query("
-            SELECT 
-                cli.razon_social AS cliente_nombre,
-                COUNT(c.id) AS total_alquileres,
-                IFNULL(SUM(cp.monto_total), 0.00) AS total_gastado
-            FROM clientes cli
-            INNER JOIN contratos_alquiler c ON cli.numero_documento = c.cliente_doc
-            LEFT JOIN comprobantes_pago cp ON cp.contrato_id = c.id AND cp.estado_comprobante = 'EMITIDO'
-            WHERE c.estado != 'CANCELADO'
-            GROUP BY cli.numero_documento, cli.razon_social
-            ORDER BY total_gastado DESC
-            LIMIT 10
-        ");
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
 
     /**
      * Registra el acceso de un usuario con su IP en la tabla iphys.
@@ -163,5 +68,97 @@ class Dashboard {
 
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    // ==========================================
+    // KPIs DEL PANEL (basados en tipo_plaza, parking, tarifas_cobros, usuarios)
+    // ==========================================
+
+    /**
+     * Tarjetas resumen: ocupación actual, ingresos de hoy/mes, tickets del día, usuarios activos.
+     */
+    public function getResumenGeneral(): array {
+        $stmt = $this->pdo->query("
+            SELECT
+                COALESCE(SUM(capacidad_total), 0)   AS capacidad_total,
+                COALESCE(SUM(espacios_ocupados), 0) AS espacios_ocupados
+            FROM tipo_plaza
+            WHERE activo = 1
+        ");
+        $ocupacion = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $stmt = $this->pdo->query("SELECT COUNT(*) FROM parking WHERE estado = 'ACTIVO'");
+        $vehiculosActivos = (int)$stmt->fetchColumn();
+
+        $stmt = $this->pdo->query("
+            SELECT COALESCE(SUM(monto_total), 0) FROM tarifas_cobros
+            WHERE DATE(fecha_hora_pago) = CURDATE()
+        ");
+        $ingresosHoy = (float)$stmt->fetchColumn();
+
+        $stmt = $this->pdo->query("
+            SELECT COALESCE(SUM(monto_total), 0) FROM tarifas_cobros
+            WHERE YEAR(fecha_hora_pago) = YEAR(CURDATE()) AND MONTH(fecha_hora_pago) = MONTH(CURDATE())
+        ");
+        $ingresosMes = (float)$stmt->fetchColumn();
+
+        $stmt = $this->pdo->query("
+            SELECT COUNT(*) FROM tarifas_cobros WHERE DATE(fecha_hora_pago) = CURDATE()
+        ");
+        $ticketsFinalizadosHoy = (int)$stmt->fetchColumn();
+
+        $stmt = $this->pdo->query("SELECT COUNT(*) FROM usuarios WHERE activo = 1");
+        $usuariosActivos = (int)$stmt->fetchColumn();
+
+        $capacidadTotal = (int)$ocupacion['capacidad_total'];
+        $espaciosOcupados = (int)$ocupacion['espacios_ocupados'];
+
+        return [
+            'vehiculos_activos'        => $vehiculosActivos,
+            'capacidad_total'          => $capacidadTotal,
+            'espacios_ocupados'        => $espaciosOcupados,
+            'espacios_disponibles'     => max(0, $capacidadTotal - $espaciosOcupados),
+            'porcentaje_ocupacion'     => $capacidadTotal > 0 ? round(($espaciosOcupados / $capacidadTotal) * 100, 1) : 0.0,
+            'ingresos_hoy'             => round($ingresosHoy, 2),
+            'ingresos_mes'             => round($ingresosMes, 2),
+            'tickets_finalizados_hoy'  => $ticketsFinalizadosHoy,
+            'usuarios_activos'         => $usuariosActivos,
+        ];
+    }
+
+    /**
+     * Ocupación por cada tipo de plaza activo, para barras de progreso.
+     */
+    public function getOcupacionPorTipo(): array {
+        $stmt = $this->pdo->query("
+            SELECT nombre, precio_hora, capacidad_total, espacios_ocupados
+            FROM tipo_plaza
+            WHERE activo = 1
+            ORDER BY nombre ASC
+        ");
+        $tipos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($tipos as &$tipo) {
+            $capacidad = (int)$tipo['capacidad_total'];
+            $ocupados = (int)$tipo['espacios_ocupados'];
+            $tipo['porcentaje'] = $capacidad > 0 ? round(($ocupados / $capacidad) * 100, 1) : 0.0;
+        }
+
+        return $tipos;
+    }
+
+    /**
+     * Ingresos cobrados por día durante los últimos 7 días (incluye hoy).
+     * Devuelve solo los días con datos; el controller completa los días vacíos con 0.
+     */
+    public function getIngresosUltimos7Dias(): array {
+        $stmt = $this->pdo->query("
+            SELECT DATE(fecha_hora_pago) AS fecha, SUM(monto_total) AS total
+            FROM tarifas_cobros
+            WHERE fecha_hora_pago >= (CURDATE() - INTERVAL 6 DAY)
+            GROUP BY DATE(fecha_hora_pago)
+            ORDER BY fecha ASC
+        ");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

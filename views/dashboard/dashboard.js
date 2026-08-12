@@ -137,10 +137,13 @@ $(document).ready(function() {
                     data: null,
                     orderable: false,
                     className: 'text-center',
-                    render: function(row) {
+                    render: function (data, type, row) {
+                        // SVG directo del ícono de "ver" (ojo), idéntico al patrón limpio de tus SVGs de editar/desactivar
+                        const svgVer = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>`;
+
                         return `
-                            <button type="button" class="btn btn-ver-ip rounded-circle text-white shadow-sm" data-id="${row.id}" style="width: 32px; height: 32px; padding:0; background-color: #d9383a; border: none;">
-                                <i class="fas fa-eye text-white"></i>
+                            <button type="button" class="btn btn-ver-ip rounded-circle text-white shadow-sm" data-id="${row.id}" style="width: 36px; height: 36px; padding: 0; display: inline-flex; align-items: center; justify-content: center; background-color: #d9383a; border: none;" title="Ver Detalle">
+                                ${svgVer}
                             </button>`;
                     }
                 }
@@ -182,5 +185,104 @@ $(document).ready(function() {
                 });
         }
     });
+
+    // ==========================================
+    // KPIs + OCUPACIÓN POR TIPO + GRÁFICO DE INGRESOS
+    // ==========================================
+    function formatSoles(valor) {
+        return `S/ ${parseFloat(valor).toFixed(2)}`;
+    }
+
+    function pintarKpis(resumen) {
+        document.getElementById('kpi_vehiculos_activos').innerText = resumen.vehiculos_activos;
+        document.getElementById('kpi_espacios_disponibles').innerText =
+            `${resumen.espacios_disponibles} / ${resumen.capacidad_total}`;
+        document.getElementById('kpi_ingresos_hoy').innerText = formatSoles(resumen.ingresos_hoy);
+        document.getElementById('kpi_ingresos_mes').innerText = formatSoles(resumen.ingresos_mes);
+    }
+
+    function pintarOcupacionPorTipo(tipos) {
+        const contenedor = document.getElementById('ocupacion-por-tipo');
+        if (!contenedor) return;
+
+        if (!Array.isArray(tipos) || tipos.length === 0) {
+            contenedor.innerHTML = '<p class="text-muted extra-small mb-0">No hay tipos de plaza activos.</p>';
+            return;
+        }
+
+        contenedor.innerHTML = tipos.map(tipo => {
+            const pct = parseFloat(tipo.porcentaje);
+            const colorBarra = pct >= 90 ? 'bg-danger' : (pct >= 60 ? 'bg-warning' : 'bg-success');
+            return `
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between extra-small mb-1">
+                        <span class="fw-semibold">${tipo.nombre}</span>
+                        <span class="text-muted">${tipo.espacios_ocupados} / ${tipo.capacidad_total} (${pct}%)</span>
+                    </div>
+                    <div class="progress" style="height: 10px; border-radius: 999px;">
+                        <div class="progress-bar ${colorBarra}" role="progressbar" style="width: ${pct}%; border-radius: 999px;"></div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    let chartIngresos = null;
+    function pintarChartIngresos(ingresos7Dias) {
+        const canvas = document.getElementById('chart_ingresos_7_dias');
+        if (!canvas || typeof Chart === 'undefined') return;
+
+        const etiquetas = ingresos7Dias.map(d => {
+            const fecha = new Date(d.fecha + 'T00:00:00');
+            return fecha.toLocaleDateString('es-PE', { day: '2-digit', month: 'short' });
+        });
+        const totales = ingresos7Dias.map(d => parseFloat(d.total));
+
+        if (chartIngresos) {
+            chartIngresos.data.labels = etiquetas;
+            chartIngresos.data.datasets[0].data = totales;
+            chartIngresos.update();
+            return;
+        }
+
+        chartIngresos = new Chart(canvas.getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: etiquetas,
+                datasets: [{
+                    label: 'Ingresos (S/)',
+                    data: totales,
+                    backgroundColor: '#d9383a',
+                    borderRadius: 6,
+                    maxBarThickness: 36
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, ticks: { callback: (v) => `S/ ${v}` } }
+                }
+            }
+        });
+    }
+
+    function cargarResumenDashboard() {
+        fetch('?c=dashboard&a=resumen')
+            .then(res => res.json())
+            .then(result => {
+                if (!result.success) return;
+                pintarKpis(result.data.resumen);
+                pintarOcupacionPorTipo(result.data.ocupacion);
+                pintarChartIngresos(result.data.ingresos_7_dias);
+            })
+            .catch(() => {
+                // Silencioso: si falla, las tarjetas quedan con "—"
+            });
+    }
+
+    cargarResumenDashboard();
+    // Refresca los KPIs cada 60s para reflejar ingresos/salidas recientes
+    setInterval(cargarResumenDashboard, 60000);
 
 });

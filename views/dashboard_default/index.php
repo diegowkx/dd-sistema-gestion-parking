@@ -1,108 +1,68 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <?php include __DIR__ . '/../layouts/head/head_meta.php'; ?>
-    <?php include __DIR__ . '/../layouts/head/head_css.php'; ?>
+    <?php include __DIR__ . '/../layouts/head.php'; ?>
 </head>
-<body>
+<body class="font-primary-family">
 
-    <!-- Preloader start -->
-    <?php include __DIR__ . '/../layouts/preloader.php'; ?>
-    <!-- Preloader end -->
-
-    <!-- Main wrapper start -->
     <div id="main-wrapper">
 
+        <!-- Sidebar Fija -->
+        <?php include __DIR__ . '/../layouts/sidebar.php'; ?>
+
+        <!-- Topbar Fija -->
         <?php include __DIR__ . '/../layouts/topbar.php'; ?>
 
-        <!-- Sidebar start -->
-        <?php include __DIR__ . '/../layouts/sidebar.php'; ?>
-        <!-- Sidebar end -->
-        
-        <!-- Content body start -->
+        <!-- Cuerpo del Módulo -->
         <div class="content-body">
             <div class="container-fluid">
-                <!-- Header -->
-                <div class="mb-sm-4 d-flex flex-wrap align-items-center text-head">
-                    <h2 class="mb-3 me-auto">Panel de Inicio - Recepción</h2>
-                    <div>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="javascript:void(0)">Inicio</a></li>
-                            <li class="breadcrumb-item active"><a href="javascript:void(0)">Dashboard</a></li>
-                        </ol>
-                    </div>
-                </div> 
 
-                <!-- TARJETA DE BIENVENIDA -->
-                <div class="row">
-                    <div class="col-xl-12">
-                        <div class="card bg-primary text-white shadow-sm">
-                            <div class="card-body p-4">
-                                <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
-                                    <div>
-                                        <h3 class="text-white fw-bold mb-2">¡Bienvenido al Sistema Hotelero!</h3>
-                                        <p class="mb-0 text-white-50 fs-6">
-                                            Utiliza el menú lateral para gestionar las reservas, registrar entradas/salidas (check-in / check-out) y administrar los servicios de las habitaciones.
-                                        </p>
-                                    </div>
-                                    <div class="bg-white p-3 rounded-circle text-primary">
-                                        <i class="fas fa-concierge-bell fs-1"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                <!-- Encabezado de la Vista -->
+                <div class="row mb-4 align-items-center">
+                    <div class="col-md-6">
+                        <h1 class="text-bold mb-0 fs-2">Panel de Inicio</h1>
+                        <p class="text-muted small mb-0 mt-1">
+                            Hola, <span class="text-bold text-dark"><?php echo htmlspecialchars(trim(($_SESSION['user_nombres'] ?? '') . ' ' . ($_SESSION['user_apellidos'] ?? ''))); ?></span> 
+                            (Rol: <span class="badge bg-secondary"><?php echo htmlspecialchars($_SESSION['user_rol'] ?? ''); ?></span>)
+                        </p>
+                    </div>
+                    <div class="col-md-6 text-md-end mt-2 mt-md-0">
+                        <span class="fs-5 text-bold text-accent">Dashboard</span>
                     </div>
                 </div>
 
-                <!-- ACCESOS RÁPIDOS OPCIONALES -->
-                <div class="row mt-4">
-                    <div class="col-md-4 mb-3">
-                        <div class="card h-100 border-0 shadow-sm">
-                            <div class="card-body text-center p-4">
-                                <div class="bg-soft-primary text-primary p-3 rounded-circle d-inline-flex mb-3" style="width: 60px; height: 60px; align-items: center; justify-content: center;">
-                                    <i class="fas fa-calendar-check fs-4"></i>
+                <!-- ÁREA DE CONTENIDO -->
+                <div class="row">
+
+                    <!-- TARJETA DE BIENVENIDA -->
+                    <div class="col-12 mb-4">
+                        <div class="card card-custom border-0 shadow-sm rounded-4 bg-white">
+                            <div class="card-body p-4 p-md-5">
+                                <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                                    <div>
+                                        <h3 class="text-dark text-bold mb-2">¡Bienvenido al Sistema!</h3>
+                                        <p class="mb-0 text-muted fs-6" style="max-width: 700px;">
+                                            Utiliza el menú lateral para navegar y realizar las operaciones correspondientes a tu rol dentro de la plataforma.
+                                        </p>
+                                    </div>
+                                    <div class="p-3 rounded-circle shadow-sm" style="width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; background-color: #19875410; color: #198754;">
+                                        <i class="fas fa-concierge-bell fs-2"></i>
+                                    </div>
                                 </div>
-                                <h5 class="fw-bold">Gestión de Reservas</h5>
-                                <p class="text-muted small">Consulta el estado de las reservas actuales y futuras de los huéspedes.</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <div class="card h-100 border-0 shadow-sm">
-                            <div class="card-body text-center p-4">
-                                <div class="bg-soft-success text-success p-3 rounded-circle d-inline-flex mb-3" style="width: 60px; height: 60px; align-items: center; justify-content: center;">
-                                    <i class="fas fa-bed fs-4"></i>
-                                </div>
-                                <h5 class="fw-bold">Estado de Habitaciones</h5>
-                                <p class="text-muted small">Revisa rápidamente cuáles habitaciones se encuentran disponibles o limpiándose.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <div class="card h-100 border-0 shadow-sm">
-                            <div class="card-body text-center p-4">
-                                <div class="bg-soft-info text-info p-3 rounded-circle d-inline-flex mb-3" style="width: 60px; height: 60px; align-items: center; justify-content: center;">
-                                    <i class="fas fa-user-friends fs-4"></i>
-                                </div>
-                                <h5 class="fw-bold">Registro de Clientes</h5>
-                                <p class="text-muted small">Visualiza y da de alta a los huéspedes que ingresan al establecimiento.</p>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
 
             </div>
         </div>
-        <!-- Content body end -->
 
-        <!-- Footer start -->
+        <!-- Footer -->
         <?php include __DIR__ . '/../layouts/footer.php'; ?>
-        <!-- Footer end -->
 
     </div>
-    <!-- Main wrapper end -->
 
-    <!-- Scripts -->
     <?php include __DIR__ . '/../layouts/scripts.php'; ?>
     <script src="<?php echo BASE_URL; ?>/views/dashboard_default/dashboard_default.js"></script>
 </body>

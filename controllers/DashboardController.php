@@ -20,82 +20,44 @@ class DashboardController {
 
         $this->requierePermiso('DASHBOARD');
 
-        $title = "Panel Principal - Sistema Rent a Car";
+        $title = "Panel Principal";
         require_once __DIR__ . '/../views/dashboard/index.php';
     }
 
     /**
-     * Endpoint API: Obtiene los ingresos totales y cantidad de contratos por rango de fechas
+     * Endpoint API: tarjetas resumen + ocupación por tipo + ingresos de los últimos 7 días,
+     * todo en una sola respuesta para minimizar peticiones desde el dashboard.
      */
-    public function getMetricas(PDO $pdo): void {
+    public function resumen(PDO $pdo): void {
         $this->requierePermisoApi('DASHBOARD');
         header('Content-Type: application/json');
-
-        $fechaInicio = filter_input(INPUT_GET, 'fecha_inicio', FILTER_DEFAULT) ?? date('Y-m-d');
-        $fechaFin    = filter_input(INPUT_GET, 'fecha_fin', FILTER_DEFAULT) ?? date('Y-m-d');
 
         require_once __DIR__ . '/../models/Dashboard.php';
         $dashboardModel = new Dashboard($pdo);
 
-        $data = $dashboardModel->getIngresosYContratosPorFecha((string)$fechaInicio, (string)$fechaFin);
+        $ingresosPorFecha = $dashboardModel->getIngresosUltimos7Dias();
+
+        // Completa los días sin cobros con 0, para que el gráfico siempre muestre 7 días
+        $indexado = [];
+        foreach ($ingresosPorFecha as $fila) {
+            $indexado[$fila['fecha']] = (float)$fila['total'];
+        }
+        $ultimos7Dias = [];
+        for ($i = 6; $i >= 0; $i--) {
+            $fecha = date('Y-m-d', strtotime("-{$i} day"));
+            $ultimos7Dias[] = [
+                'fecha' => $fecha,
+                'total' => round($indexado[$fecha] ?? 0.0, 2),
+            ];
+        }
 
         echo json_encode([
             'success' => true,
-            'data'    => [
-                'total_ventas'  => (int)$data['total_contratos'],
-                'ingreso_total' => number_format((float)$data['ingreso_total'], 2, '.', '')
+            'data' => [
+                'resumen'   => $dashboardModel->getResumenGeneral(),
+                'ocupacion' => $dashboardModel->getOcupacionPorTipo(),
+                'ingresos_7_dias' => $ultimos7Dias,
             ]
-        ]);
-        exit;
-    }
-
-    /**
-     * Endpoint API: Obtiene las entregas y devoluciones pendientes
-     */
-    public function getOperacionesProximas(PDO $pdo): void {
-        $this->requierePermisoApi('DASHBOARD');
-        header('Content-Type: application/json');
-
-        require_once __DIR__ . '/../models/Dashboard.php';
-        $dashboardModel = new Dashboard($pdo);
-
-        echo json_encode([
-            'success' => true,
-            'data'    => $dashboardModel->getOperacionesProximas()
-        ]);
-        exit;
-    }
-
-    /**
-     * Endpoint API: Obtiene el estado actual de disponibilidad de la flota
-     */
-    public function getEstadoFlota(PDO $pdo): void {
-        $this->requierePermisoApi('DASHBOARD');
-        header('Content-Type: application/json');
-
-        require_once __DIR__ . '/../models/Dashboard.php';
-        $dashboardModel = new Dashboard($pdo);
-
-        echo json_encode([
-            'success' => true,
-            'data'    => $dashboardModel->getEstadoActualFlota()
-        ]);
-        exit;
-    }
-
-    /**
-     * Endpoint API: Obtiene los clientes recurrentes o de mayor facturación
-     */
-    public function getTopClientes(PDO $pdo): void {
-        $this->requierePermisoApi('DASHBOARD');
-        header('Content-Type: application/json');
-
-        require_once __DIR__ . '/../models/Dashboard.php';
-        $dashboardModel = new Dashboard($pdo);
-
-        echo json_encode([
-            'success' => true,
-            'data'    => $dashboardModel->getTopClientes()
         ]);
         exit;
     }
